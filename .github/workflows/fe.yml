@@ -16,6 +16,12 @@ jobs:
       - uses: oven-sh/setup-bun@v1
 
       # run any `bun` or `bunx` command
-      - run: cd ./stewy-fe
-      - run: bun install
-      - run: bun run build
+      - name: install
+        run: |
+          cd ./stewy-fe
+          bun install
+      
+      - name: build
+        run: |
+          cd ./stewy-fe
+          bun run build
