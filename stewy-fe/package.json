@@ -10,7 +10,13 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@pinia/nuxt": "^0.5.1",
+    "@quasar/extras": "^1.16.11",
     "nuxt": "^3.11.2",
+    "nuxt-quasar-ui": "^2.1.2",
+    "pinia": "^2.1.7",
+    "quasar": "^2.16.4",
+    "ui": "^0.2.4",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   }
