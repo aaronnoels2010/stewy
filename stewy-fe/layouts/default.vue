@@ -97,6 +97,16 @@ export default {
           label: 'Games',
           icon: 'sports_soccer',
           path: '/games'
+        },
+        {
+          label: 'Clubs',
+          icon: 'sports_soccer',
+          path: '/clubs'
+        },
+        {
+          label: 'Chat',
+          icon: 'chat',
+          path: '/chat'
         }
       ]
     }

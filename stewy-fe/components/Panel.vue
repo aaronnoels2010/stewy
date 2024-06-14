@@ -45,8 +45,6 @@ export default {
   },
   methods:{
     clickedTab(data,evt){
-      console.log("clicked")
-      console.log(data)
 
     }
   },

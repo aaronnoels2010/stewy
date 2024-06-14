@@ -16,73 +16,20 @@
           </q-btn>
         </div>
       </div>
-      <q-table :rows="users"
+      <q-table :rows="getVolunteers"
                @row-click="rowClick"
                @update:pagination="(val) => test(val)"
                :pagination="initialPagination"
                />
     <q-dialog style="width: fit-content" v-model="persistent" persistent transition-show="scale" transition-hide="scale">
-      <q-card class="text-black text-bold text-uppercase" style="width: 300px">
-        <q-card-section>
-          <div>Create new user</div>
-        </q-card-section>
 
-        <q-card-section class="q-pt-none">
-          <q-form>
-            <div class="row">
-              <div class="col-12">
-                <q-input
-                    v-model="volunteer.firstName"
-                    filled
-                    label="firstName"
-                    :rules="[value => !!value || 'required']"
-                />
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <q-input
-                    v-model="volunteer.lastName"
-                    filled
-                    label="lastName"
-                    :rules="[value => !!value || 'required']"
-                />
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <q-input
-                    v-model="volunteer.kbvbId"
-                    filled
-                    label="kbvb id"
-                    :rules="[value => !!value || 'required']"
-                />
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <q-select
-                    v-model="volunteer.club"
-                    :options="['krcgenk','rafc','stvv']"
-                    label="club"
-                />
-              </div>
-
-
-            </div>
-          </q-form>
-        </q-card-section>
-
-        <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn flat label="OK" v-close-popup />
-        </q-card-actions>
-      </q-card>
     </q-dialog>
   </div>
 </template>
 <script>
 import volunteers from "~/data/volunteers.js";
 import NuxtLink from "#app/components/nuxt-link.js";
+import {mapActions, mapState} from "pinia";
 export default {
   name: 'TableComponent',
   data() {
@@ -90,6 +37,7 @@ export default {
       persistent: false,
       searchVolunteers: null,
       volunteer: {
+        volunteerRole: 'ST'
       },
       users: [],
       initialPagination: {
@@ -101,22 +49,28 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapState(useVolunteerStore,['getVolunteers']),
+    ...mapState(useClubStore,['getClubs'])
+  },
   methods: {
-    createNewUser() {
-      console.log("clicked on button ...")
+    ...mapActions(useVolunteerStore,{addVolunteer:'addVolunteers'}),
+    ...mapActions(useClubStore,{fetchAllClubs:'fetchAllClubs'}),
+    async createNewUser() {
+      const isValid = await this.$refs.volunteer.validate()
+      if (!isValid) return
+      await this.addVolunteer(this.volunteer)
+
     },
     test(val){
       this.initialPagination = val
-      console.log(this.initialPagination)
-      console.log(val)
-      console.log("clicked pagination ...")
     },
     rowClick(data,evt){
-      this.$router.push(`/volunteer/${evt.kbvbId}`)
+      this.$router.push(`/volunteers/${evt.id}`)
     }
   },
-  created() {
-    this.users = volunteers
+  async created() {
+    await this.fetchAllClubs();
   }
 };
 </script>

@@ -1,145 +1,112 @@
 <template>
-  <div class="row" style="margin-left: 20px">
-    <div class="col-auto">
-      <q-btn @click="backToGamesList">
-        <template v-slot:default>
-          <q-icon name="arrow_back"></q-icon>
-        </template>
-      </q-btn>
-    </div>
-    <div class="text-h6 text-bold" style="margin-left: 20px">
-      Game details
-    </div>
+ <div class="row flex justify-between" style="margin-left: 20px">
+   <div class="col">
+     <div class="row">
+       <div class="col-auto">
+         <q-btn @click="backToGamesList">
+           <template v-slot:default>
+             <q-icon name="arrow_back"></q-icon>
+             <div>
+             </div>
+           </template>
+         </q-btn>
+       </div>
+       <div class="text-h6 text-bold" style="margin-left: 20px">
+         Game details
+       </div>
+     </div>
+   </div>
+   <div class="col-auto">
+     <q-btn @click="exportFile"
+            outline
+     >
+       <template v-slot:default>
+         <div class="row">
+           <div class="col">
+             <q-icon name="attach_file"/>
+           </div>
+           <div class="col-auto">
+             {{getSelectedGame.game}}
+           </div>
+         </div>
+       </template>
+     </q-btn>
+   </div>
   </div>
   <div class="row" style="margin-left: 20px">
-      <q-card style="width: 100%;margin-top: 20px">
-        <div class="row" style="display: flex; justify-content: space-between">
-          <div class="col-5">
-            <q-card-section>
-              <div class="text-grey text-center">
-                Game
-              </div>
-              <div class="text-bold text-center">
-                {{ game.game }}
-              </div>
-            </q-card-section>
-          </div>
-          <div class="col-auto">
-            <q-card-section>
-              <div class="text-grey text-center">
-                Date
-              </div>
-              <div class="text-bold">
-                {{ game.date.split(" ")[0] }}
-              </div>
-            </q-card-section>
-          </div>
-          <div class="col-auto">
-            <q-card-section>
-              <div class="text-grey text-center">
-                Hour
-              </div>
-              <div class="text-bold">
-                {{ game.date.split(" ")[1]}}
-              </div>
-            </q-card-section>
-          </div>
-
-          <div class="col-auto">
-            <q-card-section>
-              <div class="text-grey text-center">
-                Status
-              </div>
-              <div class="text-bold">
-                <q-badge color="green" label="Create"/>
-              </div>
-            </q-card-section>
-          </div>
-          <div class="col-auto">
-            <q-card-section>
-              <div class="text-grey text-center">
-                Participants
-              </div>
-              <div class="text-bold text-center cursor-pointer" @click="openParticipantDetails(game)">
-                {{game.participants}}
-              </div>
-            </q-card-section>
-          </div>
-
-          <div class="col-auto" >
-            <q-card-section style="display: flex;justify-content: end">
-              <q-btn class="editButton" >
-                <q-icon name="edit" color="orange"></q-icon>
-              </q-btn>
-            </q-card-section>
-          </div>
-        </div>
-      </q-card>
+      <GameOverview
+          :is-selectable="false"
+          :editable="true"
+          :game="getSelectedGame"
+        />
     </div>
   <div class="row text-bold text-h4" style="margin-left: 20px;margin-top: 20px">
+    Organizer
+  </div>
+  <div class="row" style="margin-left: 20px">
+     <q-card class="element" style="width: 100%;margin-top: 20px">
+       <div class="row" style="display: flex; justify-content: space-between">
+         <div class="col-3">
+           <q-card-section>
+             <div class="text-grey text-center">
+               Last name
+             </div>
+             <div class="text-bold text-center">
+               {{ !!getSelectedGame.responsible ? getSelectedGame.responsible.lastName : null }}
+             </div>
+           </q-card-section>
+         </div>
+         <div class="col-3">
+           <q-card-section>
+             <div class="text-grey text-center">
+               First name
+             </div>
+             <div class="text-bold text-center">
+               {{ !!getSelectedGame.responsible ? getSelectedGame.responsible.firstName : null}}
+             </div>
+           </q-card-section>
+         </div>
+         <div class="col-auto">
+           <q-card-section>
+             <div class="text-grey text-center">
+               Kbvb id
+             </div>
+             <div class="text-bold text-center">
+               {{ !!getSelectedGame.responsible ?getSelectedGame.responsible.kbvbId : null }}
+             </div>
+           </q-card-section>
+         </div>
+         <div class="col-3">
+           <q-card-section>
+             <div class="text-grey text-center">
+               Role
+             </div>
+             <div class="text-bold text-center">
+               <q-badge color="green" :label="!!getSelectedGame.responsible ? getSelectedGame.responsible.role : null"/>
+             </div>
+           </q-card-section>
+         </div>
+       </div>
+     </q-card>
+   </div>
+ <div class="row text-bold text-h4" style="margin-left: 20px;margin-top: 20px">
       Participants
     </div>
-    <q-table
+  <q-table
         style="margin-left: 20px"
       grid
-      :rows="participants"
+      :rows="!!getSelectedGame.participants ? getSelectedGame.participants : []"
   >
     <template v-slot:item="props">
-      <q-card style="width: 100%;margin-top: 20px">
-        <div class="row" style="display: flex; justify-content: space-between">
-          <div class="col-3">
-            <q-card-section>
-              <div class="text-grey text-center">
-                Name
-              </div>
-              <div class="text-bold text-center">
-                {{ props.row.name }}
-              </div>
-            </q-card-section>
-          </div>
-          <div class="col-auto">
-            <q-card-section>
-              <div class="text-grey text-center">
-                Position
-              </div>
-              <div class="text-bold text-center">
-                {{ props.row.responsible}}
-              </div>
-            </q-card-section>
-          </div>
-
-          <div class="col-auto">
-            <q-card-section>
-              <div class="text-grey text-center">
-                Status
-              </div>
-              <div class="text-bold">
-                <q-badge color="green" :label="props.row.status"/>
-              </div>
-            </q-card-section>
-          </div>
-          <div class="col-auto" >
-            <q-card-section style="display: flex;justify-content: end">
-              <div class="row">
-                <div class="col">
-                  <q-btn>
-                    <q-icon name="done" color="green"/>
-                  </q-btn>
-                </div>
-                <div class="col">
-                  <q-btn>
-                    <q-icon name="close" color="red"/>
-                  </q-btn>
-                </div>
-              </div>
-            </q-card-section>
-          </div>
-        </div>
-      </q-card>
+      <VolunteerOverview
+          :volunteer="props.row"
+        />
     </template>
   </q-table>
 </template>
 <script>
+import {mapActions, mapState} from "pinia";
+
 export default {
   data(){
     return {
@@ -153,18 +120,49 @@ export default {
           status: 'Pending',
           responsible: 'ST',
         }
-      ]
+      ],
+      file: 'test'
     }
   },
   methods: {
+    ...mapActions(useGameStore,{fetchGameById:'fetchGameById'}),
     backToGamesList(){
       this.$router.push('/games')
+    },
+    async exportFile(){
+      const pdfContent = `
+    <html>
+      <head>
+        <title>PDF Document</title>
+      </head>
+      <body>
+        <h1>Hello</h1>
+        <p>Hoe gaat ie</p>
+      </body>
+    </html>
+  `;
+
+
+      event.res.setHeader('Content-Type', 'application/pdf');
+      event.res.end(buffer);
+      const url = URL.createObjectURL(pdfContent);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'document.pdf';
+      link.click();
+      console.log("export ...")
     }
+  },
+  computed:{
+    ...mapState(useGameStore,['getSelectedGame'])
+  },
+
+  async created() {
+    const {id} = this.$route.params;
+
+    await this.fetchGameById(id);
   }
 }
 </script>
 <style scoped>
-.q-btn:before{
-  box-shadow: none;
-}
 </style>

@@ -1,71 +1,36 @@
 <template>
   <div>
-    <div class="row">
-      <q-btn label="Add game" @click="open = !open"></q-btn>
+    <div class="row text-bold text-h4" style="margin-bottom: 20px; justify-content: space-between; display: flex" >
+      <div class="col">
+        Games
+      </div>
+      <div>
+        <q-btn style="width: fit-content" color="blue" @click="()=> open = true">
+          <template v-slot:default>
+            <div>
+              game
+              <q-icon name="add"/>
+            </div>
+          </template>
+        </q-btn>
+      </div>
     </div>
     <q-table
         grid
-        :rows="games"
+        :rows="getGames"
     >
       <template v-slot:item="props">
-        <q-card style="width: 100%;margin-top: 20px" class="element" @click="openParticipantDetails(props.row)" >
-          <div class="row" style="display: flex; justify-content: space-between">
-            <div class="col-5">
-              <q-card-section>
-                <div class="text-grey text-center">
-                  Game
-                </div>
-                <div class="text-bold text-center">
-                  {{ props.row.game }}
-                </div>
-              </q-card-section>
-            </div>
-            <div class="col-auto">
-              <q-card-section>
-                <div class="text-grey text-center">
-                  Date
-                </div>
-                <div class="text-bold">
-                  {{ props.row.date.split(" ")[0] }}
-                </div>
-              </q-card-section>
-            </div>
-            <div class="col-auto">
-              <q-card-section>
-                <div class="text-grey text-center">
-                  Hour
-                </div>
-                <div class="text-bold">
-                  {{ props.row.date.split(" ")[1]}}
-                </div>
-              </q-card-section>
-            </div>
-
-            <div class="col-auto">
-              <q-card-section>
-                <div class="text-grey text-center">
-                  Status
-                </div>
-                <div class="text-bold">
-                  <q-badge color="green" label="Create"/>
-                </div>
-              </q-card-section>
-            </div>
-            <div class="col-auto">
-              <q-card-section>
-                <div class="text-grey text-center">
-                  Participants
-                </div>
-                <div class="text-bold text-center">
-                  {{props.row.participants}}
-                </div>
-              </q-card-section>
-            </div>
-          </div>
-        </q-card>
+        <GameOverview
+            @updateGame="updateEvents"
+            place="games"
+            :game="props.row"
+          />
+      </template>
+      <template v-slot:no-data>
+        there are no upcomming events
       </template>
     </q-table>
-    <DialogComponent
+    <Dialog
         component="GameForm"
         v-model:open="open"
     />
@@ -74,7 +39,7 @@
 </template>
 <script>
 import DialogComponent from "~/components/Dialog.vue";
-import {mapState} from "pinia";
+import {mapActions, mapState} from "pinia";
 
 export default {
   components: {DialogComponent},
@@ -83,23 +48,27 @@ export default {
       participantOpen: false,
       open: false,
       game: {},
+      date: null
     }
   },
   methods: {
+    ...mapActions(useGameStore,{fetchAllGames:'fetchAllGames'}),
+    ...mapActions(useGameStore,{updateGames:'updateGame'}),
+
     openParticipantDetails({id}){
       this.$router.push(`/games/${id}`)
     },
-    mouseOver(){
-      console.log("mouseover ...")
+    async updateEvents(){
+
     }
   },
   computed: {
-    ...mapState(useGameStore,['games'])
+    ...mapState(useGameStore,['getGames']),
   },
-  created() {
-    console.log('test')
-    console.log(this.games)
-  }
+  async created() {
+    await this.fetchAllGames();
+
+  },
 }
 </script>
 <style scoped>
