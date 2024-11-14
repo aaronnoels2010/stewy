@@ -1,5 +1,4 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-    console.log(to)
     if(to.matched.length === 0){
         return navigateTo("/")
     }

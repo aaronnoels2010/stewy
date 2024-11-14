@@ -1,55 +1,45 @@
-<template>
-  <q-dialog :model-value="open" persistent>
-    <component :is="component" v-model:close="persist" @closeModal="closeModal" :data="data" />
-  </q-dialog>
-</template>
-<script>
-import GameForm from "~/components/GameForm.vue";
-import ParticipantOverview from "~/components/ParticipantOverview.vue";
-import VolunteerForm from "~/components/VolunteerForm.vue";
-import ClubForm from "~/components/ClubForm.vue";
-import AssignForm from "~/components/AssignForm.vue";
-import AssignVolunteer from "~/components/AssignVolunteer.vue";
-import DeadLineForm from "~/components/DeadLineForm.vue";
-export default {
+<script setup>
+const props = defineProps({
+  component: String,
+  data: Object,
+  open: Boolean,
+});
 
-  name: 'DialogComponent',
-  components:{
-    GameForm,
-    ParticipantOverview,
-    VolunteerForm,
-    ClubForm,
-    AssignForm,
-    AssignVolunteer,
-    DeadLineForm
-  },
-  watch: {
-    persist: function(newValue){
-      this.$emit('update:open',newValue)
-    },
-  },
-  props:{
-    component: {
-      type: String,
-      required:true
-    },
-    open: {
-      type: Boolean,
-      required:true
-    },
-    data: {
-      type: Object
+const { open } = toRefs(props);
+
+const emit = defineEmits(["closeModal"]);
+
+const closeModal = () => {
+  emit("closeModal", false);
+};
+
+watch(
+  open,
+  () => {
+    if (open.value) {
+      document.getElementById("my_modal_1").showModal();
     }
   },
-  data(){
-    return {
-      persist: false
-    }
-  },
-  methods: {
-    closeModal(data){
-      this.$emit('update:open',data)
-    }
-  }
-}
+  { immediate: true }
+);
 </script>
+
+<template>
+  <dialog
+    id="my_modal_1"
+    class="modal"
+    @click="closeModal"
+    @keydown.esc="closeModal"
+  >
+    <div class="modal-box">
+      <div>
+        <slot></slot>
+      </div>
+      <div class="modal-action">
+        <form method="dialog">
+          <button class="btn" @click="closeModal">Close</button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+</template>

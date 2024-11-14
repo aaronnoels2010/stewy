@@ -1,78 +1,42 @@
+<script setup lang="ts">
+import { useGameStore } from "~/stores/games.store";
+
+const { games } = useGameStore();
+const open = ref(false);
+
+const goToGameDetails = (id: string) => {
+  const router = useRouter();
+  router.push(`/games/${id}`);
+};
+</script>
+
 <template>
   <div>
-    <div class="row text-bold text-h4" style="margin-bottom: 20px; justify-content: space-between; display: flex" >
-      <div class="col">
-        Games
-      </div>
-      <div>
-        <q-btn style="width: fit-content" color="blue" @click="()=> open = true">
-          <template v-slot:default>
-            <div>
-              game
-              <q-icon name="add"/>
-            </div>
-          </template>
-        </q-btn>
+    <div class="flex">
+      <div v-for="game in games" class="card bg-base-100 w-96 shadow-xl">
+        <figure>
+          <img
+            src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+            alt="Shoes"
+          />
+        </figure>
+        <div class="card-body">
+          <h2 class="card-title">
+            {{ game.home.name }} vs {{ game.away.name }}
+          </h2>
+          <p>If a dog chews shoes whose shoes does he choose?</p>
+          <div class="card-actions justify-end">
+            <button class="btn btn-primary" @click="goToGameDetails(game.id)">
+              Details
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-    <q-table
-        grid
-        :rows="getGames"
-    >
-      <template v-slot:item="props">
-        <GameOverview
-            @updateGame="updateEvents"
-            place="games"
-            :game="props.row"
-          />
-      </template>
-      <template v-slot:no-data>
-        there are no upcomming events
-      </template>
-    </q-table>
-    <Dialog
-        component="GameForm"
-        v-model:open="open"
-    />
-
   </div>
 </template>
-<script>
-import DialogComponent from "~/components/Dialog.vue";
-import {mapActions, mapState} from "pinia";
 
-export default {
-  components: {DialogComponent},
-  data(){
-    return {
-      participantOpen: false,
-      open: false,
-      game: {},
-      date: null
-    }
-  },
-  methods: {
-    ...mapActions(useGameStore,{fetchAllGames:'fetchAllGames'}),
-    ...mapActions(useGameStore,{updateGames:'updateGame'}),
-
-    openParticipantDetails({id}){
-      this.$router.push(`/games/${id}`)
-    },
-    async updateEvents(){
-
-    }
-  },
-  computed: {
-    ...mapState(useGameStore,['getGames']),
-  },
-  async created() {
-    await this.fetchAllGames();
-
-  },
-}
-</script>
 <style scoped>
-
 .element:hover {
   background: rgba(0, 0, 0, 0.03);
 }
