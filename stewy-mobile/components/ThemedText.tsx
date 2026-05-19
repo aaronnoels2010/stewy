@@ -1,60 +1,70 @@
-import { Text, type TextProps, StyleSheet } from 'react-native';
-
-import { useThemeColor } from '@/hooks/useThemeColor';
+/**
+ * Stewy Design System — ThemedText
+ *
+ * Type-scaled text component. Use the `type` prop to apply a semantic
+ * role from the design system Typography scale.
+ *
+ * @example
+ * <ThemedText type="h1">Game Planner</ThemedText>
+ * <ThemedText type="bodySmall" muted>Match at 20:00</ThemedText>
+ * <ThemedText type="label" accent>Upcoming</ThemedText>
+ */
+import { Text, type TextProps } from 'react-native';
+import { useDesignTokens } from '@/hooks/useDesignTokens';
+import { Typography, TypographyAliases, TypographyVariant } from '@/constants/Typography';
 
 export type ThemedTextProps = TextProps & {
-  lightColor?: string;
-  darkColor?: string;
-  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
+  /** Semantic type scale variant */
+  type?: TypographyVariant;
+  /** Render in muted text color */
+  muted?: boolean;
+  /** Render in subtle text color */
+  subtle?: boolean;
+  /** Render in accent green color */
+  accent?: boolean;
+  /** Render in inverse color (for use on colored backgrounds) */
+  inverse?: boolean;
 };
 
 export function ThemedText({
   style,
-  lightColor,
-  darkColor,
-  type = 'default',
+  type = 'body',
+  muted = false,
+  subtle = false,
+  accent = false,
+  inverse = false,
+  className = '',
   ...rest
 }: ThemedTextProps) {
-  const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
+  const { classes } = useDesignTokens();
+
+  // Resolve backward-compat aliases (e.g. 'title' → 'h1')
+  const resolvedType =
+    type in TypographyAliases
+      ? TypographyAliases[type as keyof typeof TypographyAliases]
+      : (type as keyof typeof Typography);
+
+  // Pick the correct text color class
+  let colorClass = classes.text;
+  if (muted) colorClass = classes.textMuted;
+  if (subtle) colorClass = classes.textSubtle;
+  if (accent) colorClass = classes.textAccent;
+  if (inverse) colorClass = classes.textInverse;
+
+  const scale = Typography[resolvedType];
+  const typographyClasses = [
+    scale.fontSize,
+    scale.fontWeight,
+    scale.lineHeight,
+    scale.letterSpacing,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <Text
-      style={[
-        { color },
-        type === 'default' ? styles.default : undefined,
-        type === 'title' ? styles.title : undefined,
-        type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
-        type === 'subtitle' ? styles.subtitle : undefined,
-        type === 'link' ? styles.link : undefined,
-        style,
-      ]}
       {...rest}
+      className={`${colorClass} ${typographyClasses} ${className}`.trim()}
     />
   );
 }
-
-const styles = StyleSheet.create({
-  default: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  defaultSemiBold: {
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '600',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    lineHeight: 32,
-  },
-  subtitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  link: {
-    lineHeight: 30,
-    fontSize: 16,
-    color: '#0a7ea4',
-  },
-});

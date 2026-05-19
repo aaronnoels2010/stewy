@@ -1,4 +1,4 @@
-import { StatusBar, Text } from 'react-native';
+import { Text } from 'react-native';
 import { Redirect, Stack } from 'expo-router';
 
 import { useSession } from '@/contexts/auth.context';
