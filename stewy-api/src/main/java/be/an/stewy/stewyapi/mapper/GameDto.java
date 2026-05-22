@@ -20,6 +20,8 @@ public class GameDto {
     private ClubDto homeTeam;
     private ClubDto awayTeam;
     private GameStatus status;
+    private String location;
+    private String accessibility;
     private VolunteerDto responsible;
 
 }

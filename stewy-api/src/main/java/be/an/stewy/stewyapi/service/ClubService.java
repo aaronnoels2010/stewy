@@ -12,7 +12,7 @@ public interface ClubService {
 
     Map<String,Object> saveOrUpdateClub(ClubRegistrationDto clubRegistrationDto);
 
-    Map<String, Object> clubsOverview(Pagination pagination);
+    Map<String, Object> clubsOverview(Pagination pagination, boolean onlyWithHoofdSteward);
 
     ClubDto findClubById(UUID id);
 

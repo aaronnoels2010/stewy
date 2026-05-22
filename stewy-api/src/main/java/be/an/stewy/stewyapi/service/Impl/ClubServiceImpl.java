@@ -43,15 +43,18 @@ public class ClubServiceImpl implements ClubService {
         var responsible = volunteerRepository.findByVolunteerId(clubRegistrationDto.getResponsible());
         var club = clubMapper.mapClubRegistrationDtoToClub(clubRegistrationDto, responsible);
         clubRepository.saveClub(club);
-        return clubsOverview(null);
+        return clubsOverview(null, false);
     }
 
     @Override
-    public Map<String, Object> clubsOverview(Pagination pagination) {
+    public Map<String, Object> clubsOverview(Pagination pagination, boolean onlyWithHoofdSteward) {
         if (pagination == null) pagination = new Pagination();
         PageRequest pageRequest = PageRequest.of(pagination.getPageNo(), pagination.getPageSize(), pagination.paginationToSort());
         Map<String,Object> volunteersOverview = new HashMap<>();
-        volunteersOverview.put("items", clubMapper.mapClubListToClubDtoList(clubRepository.findAllClubs(pageRequest.getSort(),pageRequest)));
+        List<Club> clubs = onlyWithHoofdSteward
+                ? clubRepository.findAllClubsWithHoofdSteward(pageRequest.getSort(), pageRequest)
+                : clubRepository.findAllClubs(pageRequest.getSort(), pageRequest);
+        volunteersOverview.put("items", clubMapper.mapClubListToClubOverViewDtoList(clubs));
         volunteersOverview.put("total", clubRepository.totalCountVolunteers());
         return volunteersOverview;
     }

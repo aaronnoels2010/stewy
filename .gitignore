@@ -1,3 +1,7 @@
 .idea/
 docker-compose.yml
 node_modules/
+# Added by code-review-graph
+.code-review-graph/
+graphify-out/
+.opencode/

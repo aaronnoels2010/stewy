@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RolePicker highlights the selected role 1`] = `null`;
+
+exports[`RolePicker renders all three role options 1`] = `null`;

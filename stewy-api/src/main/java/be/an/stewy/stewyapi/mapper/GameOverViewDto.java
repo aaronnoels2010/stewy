@@ -15,4 +15,6 @@ public class GameOverViewDto {
     private GameStatus status;
     private LocalDateTime appointment;
     private LocalDateTime deadline;
+    private String location;
+    private String accessibility;
 }

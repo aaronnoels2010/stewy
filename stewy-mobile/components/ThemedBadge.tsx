@@ -24,21 +24,24 @@ export type ThemedBadgeProps = {
 };
 
 /** Maps a Game status string to a BadgeVariant */
-export function gameStatusToBadge(status: 'upcoming' | 'completed' | 'cancelled'): BadgeVariant {
+export function gameStatusToBadge(status: string): BadgeVariant {
   switch (status) {
-    case 'upcoming':  return 'info';
-    case 'completed': return 'success';
-    case 'cancelled': return 'danger';
+    case 'upcoming':
+    case 'CREATE':    return 'info';
+    case 'completed':
+    case 'CLOSED':    return 'success';
+    case 'cancelled':
+    case 'OPEN':      return 'warning';
     default:          return 'muted';
   }
 }
 
 const DOT_COLOR: Record<BadgeVariant, string> = {
-  success: '#2ECC71',
-  warning: '#F39C12',
-  danger:  '#E74C3C',
-  info:    '#3498DB',
-  muted:   '#6B7280',
+  success: '#10B981',
+  warning: '#F59E0B',
+  danger:  '#EF4444',
+  info:    '#3B82F6',
+  muted:   '#71717A',
 };
 
 export function ThemedBadge({

@@ -1,35 +1,35 @@
 /**
  * Stewy Design System — Color Tokens
  *
- * Soccer-themed palette with a green accent and full dark/light mode support.
- * All raw hex values live here; TailwindClass.ts maps them to Tailwind utilities.
+ * Premium Slate/Zinc palette with a vibrant Emerald Green accent.
+ * High-end feel with deep blacks in dark mode and clean slates in light mode.
  *
- * Accent: #2ECC71 (Emerald Green)
+ * Accent: #10B981 (Emerald 500)
  */
 
 // ─── Accent ───────────────────────────────────────────────────────────────────
-const accent = '#2ECC71';
-const accentDark = '#27AE60';
-const accentDeep = '#1E8449';
-const accentLight = '#58D68D';
+const accent = '#10B981';      // Emerald 500
+const accentDark = '#059669';  // Emerald 600
+const accentDeep = '#047857';  // Emerald 700
+const accentLight = '#34D399'; // Emerald 400
 
 // ─── Palette ──────────────────────────────────────────────────────────────────
 export const Colors = {
   light: {
     // Backgrounds
-    background: '#F4F6F0',       // Off-white pitch
+    background: '#F8FAFC',       // Slate 50
     surface: '#FFFFFF',
-    surfaceAlt: '#EAEDE4',       // Slightly tinted card surface
-    surfaceHover: '#DDE3D4',
+    surfaceAlt: '#F1F5F9',       // Slate 100
+    surfaceHover: '#E2E8F0',     // Slate 200
 
     // Borders
-    border: '#D0D8C8',
-    borderStrong: '#B0BCA4',
+    border: '#E2E8F0',           // Slate 200
+    borderStrong: '#CBD5E1',     // Slate 300
 
     // Text
-    text: '#1A2010',             // Deep forest
-    textMuted: '#5A6B4A',        // Pitch-green muted
-    textSubtle: '#8A9A7A',
+    text: '#0F172A',             // Slate 900
+    textMuted: '#64748B',        // Slate 500
+    textSubtle: '#94A3B8',       // Slate 400
     textInverse: '#FFFFFF',
 
     // Accent
@@ -38,47 +38,47 @@ export const Colors = {
     accentDark,
     accentDeep,
     accentLight,
-    accentSubtle: '#E8F8F0',     // Faint green tint for backgrounds
-    accentText: accentDeep,      // Dark enough for readability on light bg
+    accentSubtle: '#ECFDF5',     // Emerald 50
+    accentText: accentDark,
 
     // Tabs
-    tabIconDefault: '#8A9A7A',
+    tabIconDefault: '#94A3B8',
     tabIconSelected: accent,
 
     // Status
-    success: '#2ECC71',
-    successSubtle: '#E8F8F0',
-    successText: '#1E8449',
-    warning: '#F39C12',
-    warningSubtle: '#FEF5E4',
-    warningText: '#9A6109',
-    danger: '#E74C3C',
-    dangerSubtle: '#FDEDEC',
-    dangerText: '#922B21',
-    info: '#3498DB',
-    infoSubtle: '#EBF5FB',
-    infoText: '#1A5276',
+    success: '#10B981',
+    successSubtle: '#ECFDF5',
+    successText: '#047857',
+    warning: '#F59E0B',
+    warningSubtle: '#FFFBEB',
+    warningText: '#B45309',
+    danger: '#EF4444',
+    dangerSubtle: '#FEF2F2',
+    dangerText: '#B91C1C',
+    info: '#3B82F6',
+    infoSubtle: '#EFF6FF',
+    infoText: '#1D4ED8',
 
     // Icon
-    icon: '#5A6B4A',
+    icon: '#64748B',
   },
 
   dark: {
     // Backgrounds
-    background: '#0D1117',       // Deep night pitch
-    surface: '#161B22',          // Card surface
-    surfaceAlt: '#1C2128',       // Elevated surface
-    surfaceHover: '#2D333B',
+    background: '#09090B',       // Zinc 950 (True deep black)
+    surface: '#18181B',          // Zinc 900
+    surfaceAlt: '#27272A',       // Zinc 800
+    surfaceHover: '#3F3F46',     // Zinc 700
 
     // Borders
-    border: '#2D3748',
-    borderStrong: '#404B5A',
+    border: '#27272A',           // Zinc 800
+    borderStrong: '#3F3F46',     // Zinc 700
 
     // Text
-    text: '#E8F0E1',             // Soft pitch white
-    textMuted: '#6B8060',        // Muted green
-    textSubtle: '#495E40',
-    textInverse: '#0D1117',
+    text: '#FAFAFA',             // Zinc 50
+    textMuted: '#A1A1AA',        // Zinc 400
+    textSubtle: '#71717A',       // Zinc 500
+    textInverse: '#09090B',
 
     // Accent
     tint: accent,
@@ -86,28 +86,28 @@ export const Colors = {
     accentDark,
     accentDeep,
     accentLight,
-    accentSubtle: '#162A1F',     // Dark green tint for dark surfaces
-    accentText: accentLight,     // Light enough for readability on dark bg
+    accentSubtle: '#064E3B',     // Emerald 900
+    accentText: accentLight,
 
     // Tabs
-    tabIconDefault: '#6B8060',
+    tabIconDefault: '#71717A',
     tabIconSelected: accent,
 
     // Status
-    success: '#2ECC71',
-    successSubtle: '#162A1F',
-    successText: '#58D68D',
-    warning: '#FFC107',
-    warningSubtle: '#2A1F05',
-    warningText: '#FFC107',
-    danger: '#FF6B6B',
-    dangerSubtle: '#2A0F0F',
-    dangerText: '#FF6B6B',
-    info: '#5DADE2',
-    infoSubtle: '#0A1929',
-    infoText: '#5DADE2',
+    success: '#10B981',
+    successSubtle: '#064E3B',
+    successText: '#34D399',
+    warning: '#F59E0B',
+    warningSubtle: '#451A03',
+    warningText: '#FBBF24',
+    danger: '#EF4444',
+    dangerSubtle: '#450A0A',
+    dangerText: '#FCA5A5',
+    info: '#3B82F6',
+    infoSubtle: '#172554',
+    infoText: '#93C5FD',
 
     // Icon
-    icon: '#6B8060',
+    icon: '#A1A1AA',
   },
 };

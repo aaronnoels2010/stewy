@@ -32,22 +32,22 @@ const containerVariant: Record<ButtonVariant, string> = {
   primary:   'bg-accent-500 shadow-accent-sm',
   secondary: 'bg-transparent border border-accent-500',
   ghost:     'bg-transparent',
-  danger:    'bg-[#E74C3C]',
-  muted:     'bg-[#1C2128] border border-[#2D3748]',
+  danger:    'bg-red-500',
+  muted:     'bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700',
 };
 
 const containerSize: Record<ButtonSize, string> = {
-  sm: 'px-3 py-1.5 rounded-xl',
-  md: 'px-5 py-3   rounded-2xl',
-  lg: 'px-6 py-4   rounded-2xl',
+  sm: 'px-3 py-2 rounded-xl',
+  md: 'px-5 py-3 rounded-2xl',
+  lg: 'px-6 py-4 rounded-3xl',
 };
 
 const labelVariant: Record<ButtonVariant, string> = {
   primary:   'text-white',
-  secondary: 'text-accent-500',
-  ghost:     'text-accent-500',
+  secondary: 'text-accent-600 dark:text-accent-400',
+  ghost:     'text-accent-600 dark:text-accent-400',
   danger:    'text-white',
-  muted:     'text-[#6B8060]',
+  muted:     'text-zinc-600 dark:text-zinc-400',
 };
 
 const labelSize: Record<ButtonSize, string> = {
@@ -87,7 +87,7 @@ export function ThemedButton({
       {loading ? (
         <ActivityIndicator
           size="small"
-          color={variant === 'primary' || variant === 'danger' ? '#FFFFFF' : '#2ECC71'}
+          color={variant === 'primary' || variant === 'danger' ? '#FFFFFF' : '#10B981'}
         />
       ) : (
         <>

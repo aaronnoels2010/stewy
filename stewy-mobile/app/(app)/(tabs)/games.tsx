@@ -1,51 +1,45 @@
-import React, { useState } from 'react';
-import { View, ScrollView, Modal } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { IconSymbol }   from '@/components/ui/IconSymbol';
-import { GameCard, Game } from '@/components/GameCard';
-import { AddGameForm }   from '@/components/AddGameForm';
-import { ThemedText }    from '@/components/ThemedText';
-import { ThemedButton }  from '@/components/ThemedButton';
-import { ThemedView }    from '@/components/ThemedView';
+import { router } from 'expo-router';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { GameCard } from '@/components/GameCard';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { ThemedCard } from '@/components/ThemedCard';
+import { ThemedButton } from '@/components/ThemedButton';
+import { ThemedBadge } from '@/components/ThemedBadge';
 import { useDesignTokens } from '@/hooks/useDesignTokens';
-
-// ─── Initial dummy data ───────────────────────────────────────────────────────
-const INITIAL_GAMES: Game[] = [
-  {
-    id: '1',
-    opponent: 'FC Barcelona',
-    date: '10/24/2026',
-    time: '20:00',
-    location: 'Camp Nou',
-    status: 'upcoming',
-  },
-  {
-    id: '2',
-    opponent: 'Manchester City',
-    date: '10/30/2026',
-    time: '18:30',
-    location: 'Etihad Stadium',
-    status: 'upcoming',
-  },
-];
+import { useGames } from '@/contexts/games.context';
+import { useSession } from '@/contexts/auth.context';
+import { gameService } from '@/services/game.service';
+import { volunteerService } from '@/services/volunteer.service';
+import type { GameDto } from '@/types/api';
 
 export default function GamesScreen() {
-  const [games, setGames] = useState<Game[]>(INITIAL_GAMES);
-  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const { games, isLoading, error } = useGames();
   const { isDark, colors } = useDesignTokens();
+  const { isAdmin } = useSession();
+  const [myGames, setMyGames] = useState<GameDto[]>([]);
+  const [myGamesLoading, setMyGamesLoading] = useState(false);
+  const [isHoofdSteward, setIsHoofdSteward] = useState(false);
 
-  const handleAddGame = (
-    newGameData: { opponent: string; date: string; time: string; location: string }
-  ) => {
-    const newGame: Game = {
-      id: Math.random().toString(),
-      ...newGameData,
-      status: 'upcoming',
-    };
-    setGames([newGame, ...games]);
-    setIsAddModalVisible(false);
-  };
+  useEffect(() => {
+    volunteerService.getMyProfile()
+      .then((p) => setIsHoofdSteward(p.role === 'HOOFD_STEWARD' || isAdmin))
+      .catch(() => setIsHoofdSteward(isAdmin));
+  }, [isAdmin]);
+
+  useEffect(() => {
+    if (isHoofdSteward) {
+      setMyGamesLoading(true);
+      gameService.getMyClubGames()
+        .then((res) => setMyGames(res.items as GameDto[]))
+        .catch(() => {})
+        .finally(() => setMyGamesLoading(false));
+    }
+  }, [isHoofdSteward]);
 
   return (
     <SafeAreaView
@@ -55,60 +49,87 @@ export default function GamesScreen() {
     >
       <StatusBar style={isDark ? 'light' : 'dark'} />
 
-      {/* Header */}
-      <View className="px-6 pt-4 pb-2 flex-row justify-between items-center">
+      <View className="px-6 pt-4 pb-2 flex-row items-center justify-between">
         <View>
           <ThemedText type="h1">Game Planner</ThemedText>
           <ThemedText type="body" muted className="mt-1">
             Manage your team's matches
           </ThemedText>
         </View>
-
-        {/* FAB */}
-        <ThemedButton
-          label=""
-          variant="primary"
-          size="md"
-          onPress={() => setIsAddModalVisible(true)}
-          leadingIcon={<IconSymbol name="plus" size={22} color="#fff" />}
-          className="w-12 h-12 rounded-full p-0"
-        />
+        {isHoofdSteward && (
+          <ThemedButton
+            label="Create"
+            variant="primary"
+            size="sm"
+            onPress={() => router.push('/(app)/create-game' as any)}
+            className="ml-4"
+          />
+        )}
       </View>
 
-      {/* Game list */}
       <ScrollView
         className="flex-1 px-6 pt-4"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 100 }}
       >
+        {/* My Club Games (HoofdSteward only) */}
+        {isHoofdSteward && (
+          <View className="mb-6">
+            <ThemedText type="h3" className="mb-4">
+              My Club Games
+            </ThemedText>
+            {myGamesLoading ? (
+              <View className="items-center py-4">
+                <ActivityIndicator size="small" color={colors.accent} />
+              </View>
+            ) : myGames.length === 0 ? (
+              <ThemedCard className="p-4">
+                <ThemedText type="body" muted className="text-center">
+                  No club games yet.
+                </ThemedText>
+              </ThemedCard>
+            ) : (
+              myGames.map((game) => (
+                <View key={game.id} className="mb-3">
+                  <GameCard game={game as any} />
+                  {game.status === 'CREATE' && (
+                    <View className="flex-row justify-end mt-1 mr-2">
+                      <ThemedBadge variant="warning" label="Draft" dot />
+                    </View>
+                  )}
+                </View>
+              ))
+            )}
+          </View>
+        )}
+
+        {/* Upcoming Games */}
         <ThemedText type="h3" className="mb-4">
           Upcoming Games
         </ThemedText>
 
-        {games.length === 0 ? (
+        {isLoading ? (
+          <View className="items-center justify-center py-20">
+            <ActivityIndicator size="large" color={colors.accent} />
+          </View>
+        ) : error ? (
+          <View className="items-center justify-center py-20 gap-3">
+            <IconSymbol name="exclamationmark" size={48} color={colors.danger} />
+            <ThemedText type="body" muted className="text-center">
+              {error}
+            </ThemedText>
+          </View>
+        ) : games.length === 0 ? (
           <View className="items-center justify-center py-20 gap-3">
             <IconSymbol name="calendar" size={48} color={colors.border} />
             <ThemedText type="body" muted className="text-center">
-              No games planned yet.{'\n'}Tap the + button to add one.
+              No games available.
             </ThemedText>
           </View>
         ) : (
           games.map((game) => <GameCard key={game.id} game={game} />)
         )}
       </ScrollView>
-
-      {/* Add Game Modal */}
-      <Modal
-        visible={isAddModalVisible}
-        animationType="slide"
-        presentationStyle="pageSheet"
-        onRequestClose={() => setIsAddModalVisible(false)}
-      >
-        <AddGameForm
-          onSubmit={handleAddGame}
-          onCancel={() => setIsAddModalVisible(false)}
-        />
-      </Modal>
     </SafeAreaView>
   );
 }

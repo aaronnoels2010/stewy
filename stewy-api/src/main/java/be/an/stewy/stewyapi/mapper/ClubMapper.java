@@ -33,6 +33,14 @@ public interface ClubMapper {
 
     List<ClubDto> mapClubListToClubDtoList(List<Club> clubs);
 
+    @Mapping(target = "volunteerList", ignore = true)
+    @Mapping(target = "responsible", ignore = true)
+    @Mapping(target = "parkingInstructions", ignore = true)
+    @Mapping(target = "gameList", ignore = true)
+    ClubDto mapClubToClubOverViewDto(Club club);
+
+    List<ClubDto> mapClubListToClubOverViewDtoList(List<Club> clubs);
+
     @Named(value = "volunteerRole")
     default String mapVolunteerEnumToString(VolunteerRole volunteerRole){
         return volunteerRole == null ? null : volunteerRole.name();

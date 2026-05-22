@@ -17,7 +17,7 @@ public enum VolunteerRole {
 
     public static VolunteerRole mapStringToVolunteerRole(String s) {
         for (VolunteerRole role : VolunteerRole.values()) {
-            if (role.getName().equalsIgnoreCase(s)) {
+            if (role.getName().equalsIgnoreCase(s) || role.name().equalsIgnoreCase(s)) {
                 return role;
             }
         }

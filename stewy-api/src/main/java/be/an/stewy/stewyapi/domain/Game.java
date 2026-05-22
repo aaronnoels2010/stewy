@@ -33,6 +33,10 @@ public class Game {
     @Enumerated(value = EnumType.STRING)
     private GameStatus status;
 
+    private String location;
+
+    private String accessibility;
+
     @ManyToMany(mappedBy = "games")
     private List<Volunteer> participants;
 

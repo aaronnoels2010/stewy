@@ -11,43 +11,40 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // ── Stewy Accent — Soccer Green ────────────────────────────────────
+        // ── Stewy Accent — Premium Emerald ─────────────────────────────────
         accent: {
-          DEFAULT: "#2ECC71",
-          50:  "#E8F8F0",
-          100: "#D1F1E1",
-          200: "#A3E4C3",
-          300: "#75D6A5",
-          400: "#58D68D",
-          500: "#2ECC71",
-          600: "#27AE60",
-          700: "#1E8449",
-          800: "#145A32",
-          900: "#0A2D19",
-          950: "#041209",
+          DEFAULT: "#10B981",
+          50:  "#ECFDF5",
+          100: "#D1FAE5",
+          200: "#A7F3D0",
+          300: "#6EE7B7",
+          400: "#34D399",
+          500: "#10B981",
+          600: "#059669",
+          700: "#047857",
+          800: "#065F46",
+          900: "#064E3B",
+          950: "#022C22",
         },
 
         // ── Semantic Surface Tokens ────────────────────────────────────────
-        // These map to the exact hex values in Colors.ts for use in
-        // arbitrary value classes like bg-[#...] — the values here allow
-        // using named classes like bg-pitch-bg, text-pitch-text, etc.
         "pitch": {
-          bg:        "#F4F6F0",
+          bg:        "#F8FAFC",
           surface:   "#FFFFFF",
-          alt:       "#EAEDE4",
-          border:    "#D0D8C8",
-          text:      "#1A2010",
-          muted:     "#5A6B4A",
-          subtle:    "#8A9A7A",
+          alt:       "#F1F5F9",
+          border:    "#E2E8F0",
+          text:      "#0F172A",
+          muted:     "#64748B",
+          subtle:    "#94A3B8",
         },
         "night": {
-          bg:        "#0D1117",
-          surface:   "#161B22",
-          alt:       "#1C2128",
-          border:    "#2D3748",
-          text:      "#E8F0E1",
-          muted:     "#6B8060",
-          subtle:    "#495E40",
+          bg:        "#09090B",
+          surface:   "#18181B",
+          alt:       "#27272A",
+          border:    "#27272A",
+          text:      "#FAFAFA",
+          muted:     "#A1A1AA",
+          subtle:    "#71717A",
         },
       },
 
@@ -56,13 +53,17 @@ module.exports = {
       },
 
       borderRadius: {
-        "4xl": "2rem",
+        "4xl": "2.5rem", // Slightly larger for more premium feel
+        "3xl": "1.75rem",
       },
 
       boxShadow: {
-        "accent-sm": "0 2px 8px rgba(46, 204, 113, 0.25)",
-        "accent-md": "0 4px 16px rgba(46, 204, 113, 0.35)",
-        "accent-lg": "0 8px 32px rgba(46, 204, 113, 0.40)",
+        "accent-sm": "0 2px 8px rgba(16, 185, 129, 0.2)",
+        "accent-md": "0 4px 16px rgba(16, 185, 129, 0.3)",
+        "accent-lg": "0 8px 32px rgba(16, 185, 129, 0.35)",
+        "premium-sm": "0 1px 2px rgba(0, 0, 0, 0.05)",
+        "premium-md": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        "premium-lg": "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
       },
     },
   },

@@ -19,6 +19,7 @@ import {
   View,
   TextInput,
   Text,
+  Platform,
   type TextInputProps,
 } from 'react-native';
 import { useDesignTokens } from '@/hooks/useDesignTokens';
@@ -90,9 +91,13 @@ export function ThemedInput({
 
         <TextInput
           {...rest}
-          style={[{ color: textColor, flex: 1 }, style]}
+          style={[
+            { color: textColor, flex: 1 },
+            Platform.OS === 'web' && ({ outlineStyle: 'none' } as any),
+            style,
+          ]}
           placeholderTextColor={placeholderColor}
-          className={`py-4 ${leadingIcon ? 'pl-2' : 'pl-5'} ${trailingIcon ? 'pr-2' : 'pr-5'} text-base`}
+          className={`py-4 ${leadingIcon ? 'pl-2' : 'pl-5'} ${trailingIcon ? 'pr-2' : 'pr-5'} text-base outline-none`}
           onFocus={(e) => {
             setFocused(true);
             rest.onFocus?.(e);

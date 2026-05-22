@@ -3,6 +3,7 @@ package be.an.stewy.stewyapi.service.Impl;
 import be.an.stewy.stewyapi.GameStatus;
 import be.an.stewy.stewyapi.controller.GameRegistrationDto;
 import be.an.stewy.stewyapi.controller.Pagination;
+import be.an.stewy.stewyapi.domain.Club;
 import be.an.stewy.stewyapi.domain.Game;
 import be.an.stewy.stewyapi.exception.CustomException;
 import be.an.stewy.stewyapi.mapper.GameDto;
@@ -36,6 +37,12 @@ public class GameServiceImpl implements GameService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String,Object> save(GameRegistrationDto gameRegistrationDto) throws Exception {
+        if (gameRegistrationDto.getId() != null) {
+            Game existing = gameRepository.getGameById(gameRegistrationDto.getId());
+            if (existing != null) {
+                validateGameEdits(existing, gameRegistrationDto);
+            }
+        }
         var homeTeam = clubRepository.findByClubId(gameRegistrationDto.getHomeTeam());
         var awayTeam = clubRepository.findByClubId(gameRegistrationDto.getAwayTeam());
         var game = gameMapper.mapGameRegistrationDtoToGame(gameRegistrationDto,homeTeam,awayTeam);
@@ -112,6 +119,12 @@ public class GameServiceImpl implements GameService {
     @Override
     @Transactional
     public GameDto updateGame(GameRegistrationDto gameRegistrationDto) {
+        if (gameRegistrationDto.getId() != null) {
+            Game existing = gameRepository.getGameById(gameRegistrationDto.getId());
+            if (existing != null) {
+                validateGameEdits(existing, gameRegistrationDto);
+            }
+        }
         var homeTeam = clubRepository.findByClubId(gameRegistrationDto.getHomeTeam());
         var awayTeam = clubRepository.findByClubId(gameRegistrationDto.getAwayTeam());
         var game = gameMapper.mapGameRegistrationDtoToGame(gameRegistrationDto,homeTeam,awayTeam);
@@ -122,6 +135,59 @@ public class GameServiceImpl implements GameService {
         game.setStatus(GameStatus.valueOf(gameRegistrationDto.getStatus()));
         gameRepository.saveGame(game);
         return gameMapper.mapGameToGameDto(game);
+    }
+
+    @Override
+    public Map<String, Object> findMyClubGames(UUID clubId) {
+        var club = clubRepository.findByClubId(clubId);
+        if (club == null) return Map.of("items", List.of(), "total", 0);
+        var games = gameRepository.getGamesByClub(club);
+        return Map.of("items", gameMapper.mapGameListToGameDtoList(games), "total", (long) games.size());
+    }
+
+    @Override
+    @Transactional
+    public GameDto createGameAsHoofdSteward(GameRegistrationDto dto, UUID clubId) {
+        var club = clubRepository.findByClubId(clubId);
+        if (club == null) throw new CustomException("Club not found");
+        dto.setHomeTeam(club.getId());
+        return saveAsDraft(dto, club);
+    }
+
+    @Transactional
+    protected GameDto saveAsDraft(GameRegistrationDto gameRegistrationDto, Club homeTeam) {
+        var awayTeam = clubRepository.findByClubId(gameRegistrationDto.getAwayTeam());
+        var game = gameMapper.mapGameRegistrationDtoToGame(gameRegistrationDto, homeTeam, awayTeam);
+        var responsible = Optional.ofNullable(homeTeam.getResponsible())
+                .orElseThrow(() -> new CustomException("There need to be a responsible before creating a game"));
+        game.setDeadline(ZoneDateTime.mapStringToZoneDateTime(gameRegistrationDto.getDeadline()));
+        game.setAppointment(ZoneDateTime.mapStringToZoneDateTime(gameRegistrationDto.getAppointment()));
+        game.setResponsible(responsible);
+        game.setStatus(GameStatus.CREATE);
+        gameRepository.saveGame(game);
+        return gameMapper.mapGameToGameDto(game);
+    }
+
+    private void validateGameEdits(Game existing, GameRegistrationDto incoming) {
+        if (existing.getStatus() == GameStatus.CLOSED) {
+            throw new CustomException("Cannot edit a CLOSED game");
+        }
+        if (existing.getStatus() == GameStatus.OPEN) {
+            List<String> changedFields = new ArrayList<>();
+            if (incoming.getHomeTeam() != null && !incoming.getHomeTeam().equals(existing.getHomeTeam().getId())) {
+                changedFields.add("homeTeam");
+            }
+            if (incoming.getAwayTeam() != null && !incoming.getAwayTeam().equals(existing.getAwayTeam().getId())) {
+                changedFields.add("awayTeam");
+            }
+            if (incoming.getStatus() != null && !incoming.getStatus().equals(existing.getStatus().name())) {
+                changedFields.add("status");
+            }
+            if (!changedFields.isEmpty()) {
+                throw new CustomException("Cannot edit field(s) [" + String.join(", ", changedFields)
+                        + "] when game is in OPEN status. Only location and accessibility are editable.");
+            }
+        }
     }
 
     /*@Override

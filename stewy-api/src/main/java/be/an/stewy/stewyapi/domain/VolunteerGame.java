@@ -1,5 +1,6 @@
 package be.an.stewy.stewyapi.domain;
 
+import be.an.stewy.stewyapi.ParticipationStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,4 +20,8 @@ public class VolunteerGame {
     private UUID volunteerId;
     @Column(name = "game_id")
     private UUID gameId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "participation_status")
+    private ParticipationStatus participationStatus;
 }

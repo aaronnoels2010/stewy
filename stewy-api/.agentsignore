@@ -1,0 +1,10 @@
+.agents/completions/**
+.agents/sessions/**
+docs/archive/**
+.gradle/**
+build/**
+out/**
+.idea/**
+.vscode/**
+.DS_Store
+*.log

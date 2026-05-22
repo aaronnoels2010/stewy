@@ -36,6 +36,15 @@ public class VolunteerRepositoryImpl implements VolunteerRepository {
     }
 
     @Override
+    public Volunteer findByUserId(UUID userId) {
+        return entityManager.createQuery("select v from Volunteer v where v.user.id = :userId", Volunteer.class)
+                .setParameter("userId", userId)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
     @Transactional
     public void deleteVolunteer(Volunteer newVolunteer) {
         entityManager.remove(entityManager.merge(newVolunteer));
@@ -80,5 +89,29 @@ public class VolunteerRepositoryImpl implements VolunteerRepository {
     @Override
     public void assignVolunteerToGame(UUID volunteerId, UUID gameId) {
 
+    }
+
+    @Override
+    public List<Volunteer> findByClubIdAndClubStatus(UUID clubId, String clubStatus) {
+        return entityManager.createQuery(
+                "select v from Volunteer v where v.club.id = :clubId and v.clubStatus = :status", Volunteer.class)
+                .setParameter("clubId", clubId)
+                .setParameter("status", Enum.valueOf(be.an.stewy.stewyapi.ClubStatus.class, clubStatus))
+                .getResultList();
+    }
+
+    @Override
+    public List<Volunteer> findByClubId(UUID clubId) {
+        return entityManager.createQuery(
+                "select v from Volunteer v where v.club.id = :clubId", Volunteer.class)
+                .setParameter("clubId", clubId)
+                .getResultList();
+    }
+
+    @Override
+    public List<Volunteer> findByProfileStatus(String profileStatus) {
+        return entityManager.createQuery("select v from Volunteer v where v.profileStatus = :status", Volunteer.class)
+                .setParameter("status", Enum.valueOf(be.an.stewy.stewyapi.ProfileStatus.class, profileStatus))
+                .getResultList();
     }
 }

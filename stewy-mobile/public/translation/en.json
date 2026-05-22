@@ -1,6 +1,105 @@
 {
   "click-here": "Click here",
-  "volonteer": "Volonteer",
-  "volonteers": "Volonteers",
-  "welcome": "Welcome"
+  "volunteer": "Volunteer",
+  "volunteers": "Volunteers",
+  "volonteer": "Volunteer",
+  "volonteers": "Volunteers",
+  "welcome": "Welcome",
+  "signIn": {
+    "welcomeBack": "Welcome back",
+    "subtitle": "The game is waiting. Let's get planning.",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "submit": "Sign In",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "validation": {
+      "required": "Please enter both email and password."
+    },
+    "error": {
+      "generic": "An error occurred. Please try again.",
+      "invalid": "Invalid email or password."
+    }
+  },
+  "register": {
+    "title": "Create your account",
+    "subtitle": "Sign up as a volunteer and start helping out.",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "password": "Password",
+    "submit": "Create account",
+    "backToSignIn": "Back to sign in",
+    "validation": {
+      "required": "Please fill in all required fields."
+    },
+    "error": {
+      "generic": "Registration failed. Please try again."
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "userInfo": "Account Info",
+    "noProfile": "You haven't created a volunteer profile yet.",
+    "createButton": "Create volunteer profile",
+    "createTitle": "Create your volunteer profile",
+    "volunteerProfile": "Volunteer Profile",
+    "role": "Role",
+    "club": "Club",
+    "club.manualLabel": "Or enter club name",
+    "club.manualPlaceholder": "Type club name",
+    "club.noClubs": "No clubs found. Enter a new club name below.",
+    "club.loadError": "Could not load clubs. Enter a club name below.",
+    "kbvbId": "KBVB ID",
+    "submit": "Save profile",
+    "signOut": "Sign out",
+    "validation": {
+      "required": "Please fill in all fields."
+    },
+    "error": {
+      "generic": "Failed to save profile."
+    }
+  },
+  "admin": {
+    "pendingActivations": "Pending Activations",
+    "activate": "Activate",
+    "noPendingActivations": "No pending activations",
+    "pendingProfiles": "Pending Profiles",
+    "noPendingProfiles": "No pending profiles",
+    "activeVolunteers": "Active Volunteers",
+    "noActiveVolunteers": "No active volunteers",
+    "approve": "Approve",
+    "reject": "Reject",
+    "approved": "Approved",
+    "rejectTitle": "Reject profile",
+    "rejectMessage": "Are you sure you want to reject this profile?",
+    "cancel": "Cancel"
+  },
+  "validation": {
+    "email": {
+      "invalid": "Please enter a valid email address"
+    },
+    "password": {
+      "minLength": "Password must be at least 8 characters",
+      "uppercase": "Password must contain an uppercase letter",
+      "lowercase": "Password must contain a lowercase letter",
+      "digit": "Password must contain a digit"
+    },
+    "phone": {
+      "invalid": "Please enter a valid phone number"
+    }
+  },
+  "pendingGate": {
+    "title": "Account pending approval",
+    "description": "Your account needs to be activated by an admin before you can get started.",
+    "steps": {
+      "account": "Account created",
+      "profile": "Volunteer profile",
+      "approved": "Profile approved",
+      "game": "First game"
+    },
+    "signOut": "Sign out"
+  }
 }

@@ -37,5 +37,23 @@ public interface VolunteerMapper {
 
     }
 
+    default VolunteerProfileResponseDto mapVolunteerToProfileResponse(Volunteer volunteer) {
+        if (volunteer == null) return null;
+        VolunteerProfileResponseDto dto = new VolunteerProfileResponseDto();
+        dto.setId(volunteer.getId());
+        dto.setFirstName(volunteer.getFirstName());
+        dto.setLastName(volunteer.getLastName());
+        dto.setRole(volunteer.getRole());
+        if (volunteer.getClub() != null) {
+            ClubOverViewDto clubDto = new ClubOverViewDto();
+            clubDto.setId(volunteer.getClub().getId());
+            clubDto.setClubName(volunteer.getClub().getClubName());
+            dto.setClub(clubDto);
+        }
+        dto.setKbvbId(volunteer.getKbvbId());
+        dto.setProfileStatus(volunteer.getProfileStatus());
+        dto.setClubStatus(volunteer.getClubStatus());
+        return dto;
+    }
 
 }

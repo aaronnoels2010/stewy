@@ -1,5 +1,7 @@
 package be.an.stewy.stewyapi.domain;
 
+import be.an.stewy.stewyapi.ClubStatus;
+import be.an.stewy.stewyapi.ProfileStatus;
 import be.an.stewy.stewyapi.VolunteerRole;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,6 +36,19 @@ public class Volunteer {
 
     @Column(name = "kbvb_id")
     private String kbvbId;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "profile_status")
+    private ProfileStatus profileStatus;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "club_status")
+    private ClubStatus clubStatus;
+
     @ManyToMany
     @JoinTable(
             name = "volunteer_game",

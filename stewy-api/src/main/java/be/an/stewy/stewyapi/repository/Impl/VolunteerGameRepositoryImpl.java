@@ -29,4 +29,27 @@ public class VolunteerGameRepositoryImpl extends GenericRepositoryImpl<Volunteer
     public void assignVolunteerToGame(VolunteerGame volunteerGame) {
         super.saveOrUpdate(volunteerGame);
     }
+
+    @Override
+    public VolunteerGame findByVolunteerIdAndGameId(UUID volunteerId, UUID gameId) {
+        return getEntityManager().createQuery("select vg from VolunteerGame vg where vg.volunteerId = :volunteerId and vg.gameId = :gameId", VolunteerGame.class)
+                .setParameter("volunteerId", volunteerId)
+                .setParameter("gameId", gameId)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public List<VolunteerGame> findByGameId(UUID gameId) {
+        return getEntityManager().createQuery("select vg from VolunteerGame vg where vg.gameId = :gameId", VolunteerGame.class)
+                .setParameter("gameId", gameId)
+                .getResultList();
+    }
+
+    @Override
+    @Transactional
+    public void update(VolunteerGame volunteerGame) {
+        getEntityManager().merge(volunteerGame);
+    }
 }

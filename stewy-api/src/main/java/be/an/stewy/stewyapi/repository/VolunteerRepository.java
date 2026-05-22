@@ -12,6 +12,8 @@ public interface VolunteerRepository {
 
     Volunteer findByVolunteerId(UUID id);
 
+    Volunteer findByUserId(UUID userId);
+
     void deleteVolunteer(Volunteer newVolunteer);
 
     List<Volunteer> findAllVolunteers(Sort sort, Pageable pageable);
@@ -23,4 +25,7 @@ public interface VolunteerRepository {
     void update(Volunteer volunteer1);
 
     void assignVolunteerToGame(UUID volunteerId, UUID gameId);
+    List<Volunteer> findByProfileStatus(String profileStatus);
+    List<Volunteer> findByClubIdAndClubStatus(UUID clubId, String clubStatus);
+    List<Volunteer> findByClubId(UUID clubId);
 }

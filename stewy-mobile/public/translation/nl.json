@@ -1,6 +1,89 @@
 {
   "click-here": "Klik hier",
-  "volonteer": "Vrijwilleger",
-  "volonteers": "Vrijwillegers",
-  "welcome": "Welkom"
+  "volonteer": "Vrijwilliger",
+  "volonteers": "Vrijwilligers",
+  "welcome": "Welkom",
+  "signIn": {
+    "welcomeBack": "Welkom terug",
+    "subtitle": "Het spel wacht. Laten we plannen.",
+    "emailLabel": "E-mail",
+    "passwordLabel": "Wachtwoord",
+    "submit": "Inloggen",
+    "noAccount": "Nog geen account?",
+    "signUp": "Registreren",
+    "validation": {
+      "required": "Voer zowel e-mail als wachtwoord in."
+    },
+    "error": {
+      "generic": "Er is een fout opgetreden. Probeer het opnieuw.",
+      "invalid": "Ongeldige e-mail of wachtwoord."
+    }
+  },
+  "register": {
+    "title": "Account aanmaken",
+    "subtitle": "Registreer als vrijwilliger en help mee.",
+    "firstName": "Voornaam",
+    "lastName": "Achternaam",
+    "email": "E-mail",
+    "phone": "Telefoon",
+    "address": "Adres",
+    "password": "Wachtwoord",
+    "submit": "Account aanmaken",
+    "backToSignIn": "Terug naar inloggen",
+    "validation": {
+      "required": "Vul alle verplichte velden in."
+    },
+    "error": {
+      "generic": "Registratie mislukt. Probeer het opnieuw."
+    }
+  },
+  "profile": {
+    "title": "Profiel",
+    "userInfo": "Accountgegevens",
+    "noProfile": "Je hebt nog geen vrijwilligersprofiel aangemaakt.",
+    "createButton": "Vrijwilligersprofiel aanmaken",
+    "createTitle": "Maak je vrijwilligersprofiel aan",
+    "volunteerProfile": "Vrijwilligersprofiel",
+    "role": "Rol",
+    "club": "Club",
+    "club.manualLabel": "Of voer clubnaam in",
+    "club.manualPlaceholder": "Typ clubnaam",
+    "club.noClubs": "Geen clubs gevonden. Voer hieronder een nieuwe clubnaam in.",
+    "club.loadError": "Kon clubs niet laden. Voer hieronder een clubnaam in.",
+    "kbvbId": "KBVB-ID",
+    "submit": "Profiel opslaan",
+    "signOut": "Uitloggen",
+    "validation": {
+      "required": "Vul alle velden in."
+    },
+    "error": {
+      "generic": "Profiel opslaan mislukt."
+    }
+  },
+  "admin": {
+    "pendingActivations": "Openstaande activeringen",
+    "activate": "Activeren",
+    "noPendingActivations": "Geen openstaande activeringen",
+    "pendingProfiles": "Openstaande profielen",
+    "noPendingProfiles": "Geen openstaande profielen",
+    "activeVolunteers": "Actieve vrijwilligers",
+    "noActiveVolunteers": "Geen actieve vrijwilligers",
+    "approve": "Goedkeuren",
+    "reject": "Afwijzen",
+    "approved": "Goedgekeurd",
+    "rejectTitle": "Profiel afwijzen",
+    "rejectMessage": "Weet je zeker dat je dit profiel wilt afwijzen?",
+    "cancel": "Annuleren"
+  },
+  "pendingGate": {
+    "title": "Account in afwachting",
+    "description": "Je account moet worden geactiveerd door een beheerder voordat je aan de slag kunt.",
+    "steps": {
+      "account": "Account aangemaakt",
+      "profile": "Vrijwilligersprofiel",
+      "approved": "Profiel goedgekeurd",
+      "game": "Eerste wedstrijd"
+    },
+    "signOut": "Uitloggen"
+  }
 }

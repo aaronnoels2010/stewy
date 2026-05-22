@@ -14,4 +14,6 @@ public class GameRegistrationDto {
     private String appointment;
     private String deadline;
     private String status;
+    private String location;
+    private String accessibility;
 }

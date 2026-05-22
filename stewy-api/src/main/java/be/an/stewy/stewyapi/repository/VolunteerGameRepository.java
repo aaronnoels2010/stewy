@@ -8,4 +8,7 @@ import java.util.UUID;
 public interface VolunteerGameRepository {
     List<VolunteerGame> findGamesWithParticipationStatus(UUID volunteerId);
     void assignVolunteerToGame(VolunteerGame volunteerGame);
+    VolunteerGame findByVolunteerIdAndGameId(UUID volunteerId, UUID gameId);
+    List<VolunteerGame> findByGameId(UUID gameId);
+    void update(VolunteerGame volunteerGame);
 }

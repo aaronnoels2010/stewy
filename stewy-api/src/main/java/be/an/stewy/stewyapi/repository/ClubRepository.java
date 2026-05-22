@@ -12,7 +12,11 @@ public interface ClubRepository {
 
     Club findByClubId(UUID id);
 
+    Club findByClubName(String name);
+
     List<Club> findAllClubs(Sort sort, PageRequest pageRequest);
+
+    List<Club> findAllClubsWithHoofdSteward(Sort sort, PageRequest pageRequest);
 
     Object totalCountVolunteers();
 }

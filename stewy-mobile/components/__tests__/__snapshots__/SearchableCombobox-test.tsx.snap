@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchableCombobox renders create-new option when allowCreate is true 1`] = `null`;
+
+exports[`SearchableCombobox renders empty state 1`] = `null`;
+
+exports[`SearchableCombobox renders error state 1`] = `null`;
+
+exports[`SearchableCombobox renders loading state 1`] = `null`;
+
+exports[`SearchableCombobox renders with options 1`] = `null`;

@@ -19,4 +19,7 @@ public interface GameService {
     List<GameDto> findGamesByClub(UUID gameId);
 
     GameDto updateGame(GameRegistrationDto gameRegistrationDto);
+
+    Map<String, Object> findMyClubGames(UUID clubId);
+    GameDto createGameAsHoofdSteward(GameRegistrationDto dto, UUID clubId);
 }

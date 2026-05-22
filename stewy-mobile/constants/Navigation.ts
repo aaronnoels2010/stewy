@@ -19,9 +19,21 @@ const Games: NavigationItem = {
   name: "games",
 };
 
+const Profile: NavigationItem = {
+  href: "/(app)/(tabs)/profile",
+  name: "profile",
+};
+
+const Invitations: NavigationItem = {
+  href: "/(app)/(tabs)/invitations" as any,
+  name: "invitations",
+};
+
 export const Navigation = {
   Root,
   Explore,
   Volonteers,
   Games,
+  Profile,
+  Invitations,
 };

@@ -12,105 +12,140 @@ import { ThemedText }   from "@/components/ThemedText";
 import { ThemedInput }  from "@/components/ThemedInput";
 import { ThemedButton } from "@/components/ThemedButton";
 import { IconSymbol }   from "@/components/ui/IconSymbol";
+import { ThemedView }   from "@/components/ThemedView";
+import { useDesignTokens } from "@/hooks/useDesignTokens";
+import { ApiError } from "@/services/api";
+import { useTranslation } from "react-i18next";
+import { signInSchema } from "@/lib/signInSchema";
+import { apiErrorMapper, mapZodErrors } from "@/lib/apiErrorMapper";
 
 export default function SignIn() {
   const { signIn } = useSession();
   const router = useRouter();
+  const { t } = useTranslation();
   const [email,    setEmail]    = useState("");
   const [password, setPassword] = useState("");
   const [loading,  setLoading]  = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [error,    setError]    = useState("");
+  const { isDark, colors } = useDesignTokens();
 
   const handleSignIn = async () => {
-    if (!email || !password) {
-      setError("Please enter both email and password.");
+    const result = signInSchema.safeParse({ email, password });
+    if (!result.success) {
+      setFieldErrors(mapZodErrors(result.error, t));
       return;
     }
-    if (email !== "admin@stewy.com" || password !== "password") {
-      setError("Invalid credentials. Try admin@stewy.com / password");
-      return;
-    }
+
+    setFieldErrors({});
     setError("");
     setLoading(true);
-    // Simulate async sign-in
-    await new Promise((r) => setTimeout(r, 600));
-    signIn();
-    router.replace("/(app)/(tabs)");
+
+    try {
+      await signIn(email, password);
+      router.replace("/(app)/(tabs)");
+    } catch (err) {
+      if (err instanceof ApiError) {
+        if (err.errors) {
+          setFieldErrors(apiErrorMapper({ errors: err.errors }));
+        } else {
+          setError(err.message);
+        }
+      } else {
+        setError(t("signIn.error.generic"));
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      className="flex-1 bg-[#0D1117]"
-    >
-      <StatusBar style="light" />
+    <ThemedView className="flex-1">
+      <StatusBar style={isDark ? "light" : "dark"} />
+      
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="flex-1"
+      >
+        {/* Decorative elements for premium feel */}
+        <View 
+          className="absolute top-[-50] right-[-50] w-[300] h-[300] rounded-full opacity-20" 
+          style={{ backgroundColor: colors.accent }}
+        />
+        <View 
+          className="absolute bottom-[-100] left-[-100] w-[400] h-[400] rounded-full opacity-10" 
+          style={{ backgroundColor: colors.accentDark }}
+        />
 
-      {/* Decorative blobs */}
-      <View className="absolute top-0 right-0 w-72 h-72 bg-accent-500 rounded-full opacity-10 -mr-20 -mt-20" />
-      <View className="absolute bottom-0 left-0 w-80 h-80 bg-accent-700 rounded-full opacity-10 -ml-28 -mb-28" />
-
-      <View className="flex-1 justify-center px-8 z-10">
-        {/* Wordmark */}
-        <View className="mb-12">
-          <View className="flex-row items-center gap-3 mb-3">
-            {/* Soccer ball icon placeholder */}
-            <View className="w-10 h-10 bg-accent-500 rounded-full items-center justify-center">
-              <IconSymbol name="soccerball" size={22} color="#fff" />
-            </View>
-            <ThemedText type="display" className="text-white">
-              Stewy
-            </ThemedText>
-          </View>
-          <ThemedText type="body" className="text-[#6B8060]">
-            Welcome back. Let's get planning.
-          </ThemedText>
-        </View>
-
-        {/* Form */}
-        <View className="gap-4">
-          <ThemedInput
-            label="Email"
-            placeholder="Enter your email"
-            value={email}
-            onChangeText={(v) => { setEmail(v); setError(""); }}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            leadingIcon={<IconSymbol name="envelope" size={18} color="#6B8060" />}
-          />
-
-          <ThemedInput
-            label="Password"
-            placeholder="Enter your password"
-            value={password}
-            onChangeText={(v) => { setPassword(v); setError(""); }}
-            secureTextEntry
-            leadingIcon={<IconSymbol name="lock" size={18} color="#6B8060" />}
-            error={error || undefined}
-          />
-
-          <View className="pt-2">
-            <ThemedButton
-              label="Sign In"
-              variant="primary"
-              size="lg"
-              loading={loading}
-              onPress={handleSignIn}
-              className="w-full"
-            />
-          </View>
-
-          <View className="flex-row justify-center mt-4">
-            <ThemedText type="body" className="text-[#6B8060]">
-              Don't have an account?{" "}
-            </ThemedText>
-            <TouchableOpacity>
-              <ThemedText type="bodySemiBold" accent>
-                Sign up
+        <View className="flex-1 justify-center px-8 z-10">
+          {/* Wordmark */}
+          <View className="mb-12">
+            <View className="flex-row items-center gap-4 mb-4">
+              <View 
+                className="w-12 h-12 rounded-2xl items-center justify-center shadow-accent-lg"
+                style={{ backgroundColor: colors.accent }}
+              >
+                <IconSymbol name="soccerball" size={28} color="#fff" />
+              </View>
+              <ThemedText type="display">
+                Stewy
               </ThemedText>
-            </TouchableOpacity>
+            </View>
+            <ThemedText type="h2" className="mb-2">
+              {t("signIn.welcomeBack")}
+            </ThemedText>
+            <ThemedText type="body" variant="muted">
+              {t("signIn.subtitle")}
+            </ThemedText>
+          </View>
+
+          {/* Form */}
+          <View className="gap-5 bg-white/50 dark:bg-zinc-900/50 p-6 rounded-[2.5rem] border border-white/20 dark:border-zinc-800/50 shadow-premium-lg">
+            <ThemedInput
+              label={t("signIn.emailLabel")}
+              placeholder="admin@stewy.com"
+              value={email}
+              onChangeText={(v) => { setEmail(v); setFieldErrors({}); setError(""); }}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              leadingIcon={<IconSymbol name="envelope" size={18} color={colors.textMuted} />}
+              error={fieldErrors.email}
+            />
+
+            <ThemedInput
+              label={t("signIn.passwordLabel")}
+              placeholder="••••••••"
+              value={password}
+              onChangeText={(v) => { setPassword(v); setFieldErrors({}); setError(""); }}
+              secureTextEntry
+              leadingIcon={<IconSymbol name="lock" size={18} color={colors.textMuted} />}
+              error={fieldErrors.password || error || undefined}
+            />
+
+            <View className="pt-2">
+              <ThemedButton
+                label={t("signIn.submit")}
+                variant="primary"
+                size="lg"
+                loading={loading}
+                onPress={handleSignIn}
+                className="w-full shadow-accent-md"
+              />
+            </View>
+
+            <View className="flex-row justify-center mt-2">
+              <ThemedText type="bodySmall" variant="muted">
+                {t("signIn.noAccount")}{" "}
+              </ThemedText>
+              <TouchableOpacity onPress={() => router.push("/register")}>
+                <ThemedText type="bodySmall" className="font-bold" accent>
+                  {t("signIn.signUp")}
+                </ThemedText>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </ThemedView>
   );
 }

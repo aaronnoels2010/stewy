@@ -8,78 +8,78 @@
 export const TailwindClasses = {
   light: {
     // ── Backgrounds ──────────────────────────────────────────────────────────
-    background: 'bg-[#F4F6F0]',
+    background: 'bg-[#F8FAFC]',
     surface: 'bg-white',
-    surfaceAlt: 'bg-[#EAEDE4]',
+    surfaceAlt: 'bg-[#F1F5F9]',
 
     // ── Borders ───────────────────────────────────────────────────────────────
-    border: 'border-[#D0D8C8]',
-    borderStrong: 'border-[#B0BCA4]',
+    border: 'border-[#E2E8F0]',
+    borderStrong: 'border-[#CBD5E1]',
 
     // ── Text ──────────────────────────────────────────────────────────────────
-    text: 'text-[#1A2010]',
-    textMuted: 'text-[#5A6B4A]',
-    textSubtle: 'text-[#8A9A7A]',
+    text: 'text-[#0F172A]',
+    textMuted: 'text-[#64748B]',
+    textSubtle: 'text-[#94A3B8]',
     textInverse: 'text-white',
-    textAccent: 'text-[#1E8449]',
+    textAccent: 'text-[#059669]',
 
     // ── Accent ────────────────────────────────────────────────────────────────
-    accentBg: 'bg-[#2ECC71]',
-    accentSubtle: 'bg-[#E8F8F0]',
+    accentBg: 'bg-[#10B981]',
+    accentSubtle: 'bg-[#ECFDF5]',
 
     // ── Tabs ──────────────────────────────────────────────────────────────────
-    tint: 'text-[#2ECC71]',
-    tabIconDefault: '#8A9A7A',
-    tabIconSelected: '#2ECC71',
-    icon: '#5A6B4A',
+    tint: 'text-[#10B981]',
+    tabIconDefault: '#94A3B8',
+    tabIconSelected: '#10B981',
+    icon: '#64748B',
 
     // ── Status ────────────────────────────────────────────────────────────────
-    successBg: 'bg-[#E8F8F0]',
-    successText: 'text-[#1E8449]',
-    warningBg: 'bg-[#FEF5E4]',
-    warningText: 'text-[#9A6109]',
-    dangerBg: 'bg-[#FDEDEC]',
-    dangerText: 'text-[#922B21]',
-    infoBg: 'bg-[#EBF5FB]',
-    infoText: 'text-[#1A5276]',
+    successBg: 'bg-[#ECFDF5]',
+    successText: 'text-[#047857]',
+    warningBg: 'bg-[#FFFBEB]',
+    warningText: 'text-[#B45309]',
+    dangerBg: 'bg-[#FEF2F2]',
+    dangerText: 'text-[#B91C1C]',
+    infoBg: 'bg-[#EFF6FF]',
+    infoText: 'text-[#1D4ED8]',
   },
 
   dark: {
     // ── Backgrounds ──────────────────────────────────────────────────────────
-    background: 'bg-[#0D1117]',
-    surface: 'bg-[#161B22]',
-    surfaceAlt: 'bg-[#1C2128]',
+    background: 'bg-[#09090B]',
+    surface: 'bg-[#18181B]',
+    surfaceAlt: 'bg-[#27272A]',
 
     // ── Borders ───────────────────────────────────────────────────────────────
-    border: 'border-[#2D3748]',
-    borderStrong: 'border-[#404B5A]',
+    border: 'border-[#27272A]',
+    borderStrong: 'border-[#3F3F46]',
 
     // ── Text ──────────────────────────────────────────────────────────────────
-    text: 'text-[#E8F0E1]',
-    textMuted: 'text-[#6B8060]',
-    textSubtle: 'text-[#495E40]',
-    textInverse: 'text-[#0D1117]',
-    textAccent: 'text-[#58D68D]',
+    text: 'text-[#FAFAFA]',
+    textMuted: 'text-[#A1A1AA]',
+    textSubtle: 'text-[#71717A]',
+    textInverse: 'text-[#09090B]',
+    textAccent: 'text-[#34D399]',
 
     // ── Accent ────────────────────────────────────────────────────────────────
-    accentBg: 'bg-[#2ECC71]',
-    accentSubtle: 'bg-[#162A1F]',
+    accentBg: 'bg-[#10B981]',
+    accentSubtle: 'bg-[#064E3B]',
 
     // ── Tabs ──────────────────────────────────────────────────────────────────
-    tint: 'text-[#2ECC71]',
-    tabIconDefault: '#6B8060',
-    tabIconSelected: '#2ECC71',
-    icon: '#6B8060',
+    tint: 'text-[#10B981]',
+    tabIconDefault: '#71717A',
+    tabIconSelected: '#10B981',
+    icon: '#A1A1AA',
 
     // ── Status ────────────────────────────────────────────────────────────────
-    successBg: 'bg-[#162A1F]',
-    successText: 'text-[#58D68D]',
-    warningBg: 'bg-[#2A1F05]',
-    warningText: 'text-[#FFC107]',
-    dangerBg: 'bg-[#2A0F0F]',
-    dangerText: 'text-[#FF6B6B]',
-    infoBg: 'bg-[#0A1929]',
-    infoText: 'text-[#5DADE2]',
+    successBg: 'bg-[#064E3B]',
+    successText: 'text-[#34D399]',
+    warningBg: 'bg-[#451A03]',
+    warningText: 'text-[#FBBF24]',
+    dangerBg: 'bg-[#450A0A]',
+    dangerText: 'text-[#FCA5A5]',
+    infoBg: 'bg-[#172554]',
+    infoText: 'text-[#93C5FD]',
   },
 } as const;
 

@@ -38,6 +38,15 @@ public class ClubRepositoryImpl implements ClubRepository {
     }
 
     @Override
+    public Club findByClubName(String name) {
+        return entityManager.createQuery("select c from Club c where lower(c.clubName) = lower(:name)", Club.class)
+                .setParameter("name", name)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
     public List<Club> findAllClubs(Sort sort, PageRequest pageable) {
         if (pageable.getSort().stream().anyMatch(s -> s.getProperty().equalsIgnoreCase("name"))){
             sort = Sort.by(Sort.Direction.ASC,"lastName").and(Sort.by(Sort.Direction.ASC, "firstName"));
@@ -48,6 +57,17 @@ public class ClubRepositoryImpl implements ClubRepository {
 
         String query = baseQuery + orderQuery + " ";
 
+        return entityManager.createQuery(query, Club.class)
+                .setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList();
+    }
+
+    @Override
+    public List<Club> findAllClubsWithHoofdSteward(Sort sort, PageRequest pageable) {
+        String baseQuery = "select c from Club c where c.responsible is not null and c.responsible.profileStatus = 'APPROVED' order by ";
+        String orderQuery = sort.get().map(s -> s.getProperty() + " " + s.getDirection()).collect(Collectors.joining(","));
+        String query = baseQuery + orderQuery + " ";
         return entityManager.createQuery(query, Club.class)
                 .setFirstResult((int) pageable.getOffset())
                 .setMaxResults(pageable.getPageSize())

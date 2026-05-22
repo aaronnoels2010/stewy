@@ -4,6 +4,7 @@ import be.an.stewy.stewyapi.VolunteerRegistrationDto;
 import be.an.stewy.stewyapi.mapper.GameParticipationStatusDTO;
 import be.an.stewy.stewyapi.mapper.VolunteerDto;
 import be.an.stewy.stewyapi.service.VolunteerService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class VolunteerController {
     }
 
     @PostMapping(value = "/volunteers/add")
-    public Map<String,Object> saveNewVolunteer(@RequestBody VolunteerRegistrationDto volunteerRegistrationDto){
+    public Map<String,Object> saveNewVolunteer(@Valid @RequestBody VolunteerRegistrationDto volunteerRegistrationDto){
         return volunteerService.createNewPerson(volunteerRegistrationDto);
     }
 
