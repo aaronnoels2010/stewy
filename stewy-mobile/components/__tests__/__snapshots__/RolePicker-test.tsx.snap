@@ -1,5 +1,277 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`RolePicker highlights the selected role 1`] = `null`;
+exports[`RolePicker highlights the selected role 1`] = `
+<View
+  className="gap-2"
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+  >
+    <View
+      className="w-5 h-5 rounded-full border-2 items-center justify-center border-zinc-400 dark:border-zinc-500"
+    />
+    <Text
+      className="text-base font-semibold text-zinc-800 dark:text-zinc-200"
+    >
+      HoofdSteward
+    </Text>
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+  >
+    <View
+      className="w-5 h-5 rounded-full border-2 items-center justify-center border-zinc-400 dark:border-zinc-500"
+    />
+    <Text
+      className="text-base font-semibold text-zinc-800 dark:text-zinc-200"
+    >
+      DevisieChef
+    </Text>
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+  >
+    <View
+      className="w-5 h-5 rounded-full border-2 items-center justify-center border-white"
+    >
+      <View
+        className="w-2.5 h-2.5 rounded-full bg-white"
+      />
+    </View>
+    <Text
+      className="text-base font-semibold text-white"
+    >
+      Steward
+    </Text>
+  </View>
+</View>
+`;
 
-exports[`RolePicker renders all three role options 1`] = `null`;
+exports[`RolePicker renders all three role options 1`] = `
+<View
+  className="gap-2"
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+  >
+    <View
+      className="w-5 h-5 rounded-full border-2 items-center justify-center border-zinc-400 dark:border-zinc-500"
+    />
+    <Text
+      className="text-base font-semibold text-zinc-800 dark:text-zinc-200"
+    >
+      HoofdSteward
+    </Text>
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+  >
+    <View
+      className="w-5 h-5 rounded-full border-2 items-center justify-center border-zinc-400 dark:border-zinc-500"
+    />
+    <Text
+      className="text-base font-semibold text-zinc-800 dark:text-zinc-200"
+    >
+      DevisieChef
+    </Text>
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+  >
+    <View
+      className="w-5 h-5 rounded-full border-2 items-center justify-center border-zinc-400 dark:border-zinc-500"
+    />
+    <Text
+      className="text-base font-semibold text-zinc-800 dark:text-zinc-200"
+    >
+      Steward
+    </Text>
+  </View>
+</View>
+`;

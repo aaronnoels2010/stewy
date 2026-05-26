@@ -26,4 +26,5 @@ public interface VolunteerService {
     VolunteerProfileResponseDto approveProfile(UUID volunteerId);
     VolunteerProfileResponseDto rejectProfile(UUID volunteerId, String reason);
     List<VolunteerProfileResponseDto> getVolunteersByProfileStatus(be.an.stewy.stewyapi.ProfileStatus status);
+    List<VolunteerProfileResponseDto> getPendingProfilesByClub(UUID clubId);
 }

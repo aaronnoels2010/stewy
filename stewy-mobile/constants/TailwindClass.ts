@@ -1,85 +1,66 @@
-/**
- * Stewy Design System — Tailwind Class Map
- *
- * Maps semantic design tokens to NativeWind (Tailwind) utility class strings.
- * Consumed by `useTailwindThemeClass` and `useDesignTokens`.
- */
-
 export const TailwindClasses = {
   light: {
-    // ── Backgrounds ──────────────────────────────────────────────────────────
-    background: 'bg-[#F8FAFC]',
+    background: 'bg-[#F2F5F7]',
     surface: 'bg-white',
-    surfaceAlt: 'bg-[#F1F5F9]',
+    surfaceAlt: 'bg-[#E7EEFF]',
 
-    // ── Borders ───────────────────────────────────────────────────────────────
-    border: 'border-[#E2E8F0]',
-    borderStrong: 'border-[#CBD5E1]',
+    border: 'border-[#BECAB9]',
+    borderStrong: 'border-[#6F7A6C]',
 
-    // ── Text ──────────────────────────────────────────────────────────────────
-    text: 'text-[#0F172A]',
-    textMuted: 'text-[#64748B]',
-    textSubtle: 'text-[#94A3B8]',
+    text: 'text-[#111C2D]',
+    textMuted: 'text-[#3F4A3D]',
+    textSubtle: 'text-[#6F7A6C]',
     textInverse: 'text-white',
-    textAccent: 'text-[#059669]',
+    textAccent: 'text-[#005318]',
 
-    // ── Accent ────────────────────────────────────────────────────────────────
-    accentBg: 'bg-[#10B981]',
-    accentSubtle: 'bg-[#ECFDF5]',
+    accentBg: 'bg-[#006B22]',
+    accentSubtle: 'bg-[#E7F5E8]',
 
-    // ── Tabs ──────────────────────────────────────────────────────────────────
-    tint: 'text-[#10B981]',
-    tabIconDefault: '#94A3B8',
-    tabIconSelected: '#10B981',
-    icon: '#64748B',
+    tint: 'text-[#006B22]',
+    tabIconDefault: '#6F7A6C',
+    tabIconSelected: '#006B22',
+    icon: '#3F4A3D',
 
-    // ── Status ────────────────────────────────────────────────────────────────
-    successBg: 'bg-[#ECFDF5]',
-    successText: 'text-[#047857]',
-    warningBg: 'bg-[#FFFBEB]',
-    warningText: 'text-[#B45309]',
-    dangerBg: 'bg-[#FEF2F2]',
-    dangerText: 'text-[#B91C1C]',
-    infoBg: 'bg-[#EFF6FF]',
-    infoText: 'text-[#1D4ED8]',
+    successBg: 'bg-[#E7F5E8]',
+    successText: 'text-[#005318]',
+    warningBg: 'bg-[#FFF8E1]',
+    warningText: 'text-[#6B5200]',
+    dangerBg: 'bg-[#FFDAD6]',
+    dangerText: 'text-[#93000A]',
+    infoBg: 'bg-[#E1F0FF]',
+    infoText: 'text-[#0D4368]',
   },
 
   dark: {
-    // ── Backgrounds ──────────────────────────────────────────────────────────
-    background: 'bg-[#09090B]',
-    surface: 'bg-[#18181B]',
-    surfaceAlt: 'bg-[#27272A]',
+    background: 'bg-[#0B121D]',
+    surface: 'bg-[#111C2D]',
+    surfaceAlt: 'bg-[#1E293B]',
 
-    // ── Borders ───────────────────────────────────────────────────────────────
-    border: 'border-[#27272A]',
-    borderStrong: 'border-[#3F3F46]',
+    border: 'border-[#3F4A3D]',
+    borderStrong: 'border-[#8E918F]',
 
-    // ── Text ──────────────────────────────────────────────────────────────────
-    text: 'text-[#FAFAFA]',
-    textMuted: 'text-[#A1A1AA]',
-    textSubtle: 'text-[#71717A]',
-    textInverse: 'text-[#09090B]',
-    textAccent: 'text-[#34D399]',
+    text: 'text-[#ECF1FF]',
+    textMuted: 'text-[#D8E3FB]',
+    textSubtle: 'text-[#6F7A6C]',
+    textInverse: 'text-[#0B121D]',
+    textAccent: 'text-[#91FA95]',
 
-    // ── Accent ────────────────────────────────────────────────────────────────
-    accentBg: 'bg-[#10B981]',
-    accentSubtle: 'bg-[#064E3B]',
+    accentBg: 'bg-[#2D963F]',
+    accentSubtle: 'bg-[#1E293B]',
 
-    // ── Tabs ──────────────────────────────────────────────────────────────────
-    tint: 'text-[#10B981]',
-    tabIconDefault: '#71717A',
-    tabIconSelected: '#10B981',
-    icon: '#A1A1AA',
+    tint: 'text-[#2D963F]',
+    tabIconDefault: '#D8E3FB',
+    tabIconSelected: '#2D963F',
+    icon: '#D8E3FB',
 
-    // ── Status ────────────────────────────────────────────────────────────────
-    successBg: 'bg-[#064E3B]',
-    successText: 'text-[#34D399]',
-    warningBg: 'bg-[#451A03]',
-    warningText: 'text-[#FBBF24]',
-    dangerBg: 'bg-[#450A0A]',
-    dangerText: 'text-[#FCA5A5]',
-    infoBg: 'bg-[#172554]',
-    infoText: 'text-[#93C5FD]',
+    successBg: 'bg-[#1E293B]',
+    successText: 'text-[#91FA95]',
+    warningBg: 'bg-[#3A2E00]',
+    warningText: 'text-[#FFD84D]',
+    dangerBg: 'bg-[#690005]',
+    dangerText: 'text-[#FFB4AB]',
+    infoBg: 'bg-[#003256]',
+    infoText: 'text-[#81D4FF]',
   },
 } as const;
 

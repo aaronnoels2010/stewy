@@ -20,4 +20,6 @@ public interface GameParticipationService {
 
     List<VolunteerGameDto> getPendingRequestsForGame(UUID gameId);
     List<VolunteerGameDto> getInvitationsForVolunteer(UUID volunteerId);
+    List<VolunteerGameDto> getPendingRequestsForClubGames(UUID clubId);
+    List<VolunteerGameDto> getPendingInvitationsForClubGames(UUID clubId);
 }

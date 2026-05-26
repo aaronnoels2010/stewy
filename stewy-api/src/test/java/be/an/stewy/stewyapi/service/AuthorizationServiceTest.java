@@ -151,4 +151,61 @@ class AuthorizationServiceTest {
         assertThrows(AccessDeniedException.class,
                 () -> authorizationService.checkGameHoofdSteward(authentication, gameId));
     }
+
+    @Test
+    void checkHoofdStewardForVolunteer_withMatchingClub_returnsHoofdSteward() {
+        UUID targetVolunteerId = UUID.randomUUID();
+        Volunteer targetVolunteer = new Volunteer();
+        targetVolunteer.setId(targetVolunteerId);
+        targetVolunteer.setClub(club);
+
+        when(volunteerRepository.findByUserId(userId)).thenReturn(hoofdSteward);
+        when(volunteerRepository.findByVolunteerId(targetVolunteerId)).thenReturn(targetVolunteer);
+
+        Volunteer result = authorizationService.checkHoofdStewardForVolunteer(authentication, targetVolunteerId);
+
+        assertNotNull(result);
+        assertEquals(hoofdSteward.getId(), result.getId());
+    }
+
+    @Test
+    void checkHoofdStewardForVolunteer_withWrongClub_throwsAccessDenied() {
+        UUID targetVolunteerId = UUID.randomUUID();
+        Club otherClub = new Club();
+        otherClub.setId(UUID.randomUUID());
+        Volunteer targetVolunteer = new Volunteer();
+        targetVolunteer.setId(targetVolunteerId);
+        targetVolunteer.setClub(otherClub);
+
+        when(volunteerRepository.findByUserId(userId)).thenReturn(hoofdSteward);
+        when(volunteerRepository.findByVolunteerId(targetVolunteerId)).thenReturn(targetVolunteer);
+
+        assertThrows(AccessDeniedException.class,
+                () -> authorizationService.checkHoofdStewardForVolunteer(authentication, targetVolunteerId));
+    }
+
+    @Test
+    void checkHoofdStewardForVolunteer_withNoClubOnTarget_throwsAccessDenied() {
+        UUID targetVolunteerId = UUID.randomUUID();
+        Volunteer targetVolunteer = new Volunteer();
+        targetVolunteer.setId(targetVolunteerId);
+        targetVolunteer.setClub(null);
+
+        when(volunteerRepository.findByUserId(userId)).thenReturn(hoofdSteward);
+        when(volunteerRepository.findByVolunteerId(targetVolunteerId)).thenReturn(targetVolunteer);
+
+        assertThrows(AccessDeniedException.class,
+                () -> authorizationService.checkHoofdStewardForVolunteer(authentication, targetVolunteerId));
+    }
+
+    @Test
+    void checkHoofdStewardForVolunteer_withNonExistentTarget_throwsAccessDenied() {
+        UUID targetVolunteerId = UUID.randomUUID();
+
+        when(volunteerRepository.findByUserId(userId)).thenReturn(hoofdSteward);
+        when(volunteerRepository.findByVolunteerId(targetVolunteerId)).thenReturn(null);
+
+        assertThrows(AccessDeniedException.class,
+                () -> authorizationService.checkHoofdStewardForVolunteer(authentication, targetVolunteerId));
+    }
 }

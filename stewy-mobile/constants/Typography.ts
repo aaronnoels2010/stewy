@@ -1,86 +1,66 @@
-/**
- * Stewy Design System — Typography Scale
- *
- * Maps semantic type roles to Tailwind utility class strings.
- * Use these via ThemedText's `type` prop.
- */
-
 export const Typography = {
-  /** Hero titles — 36px / 900 */
   display: {
+    fontFamily: 'font-display',
     fontSize: 'text-4xl',
-    fontWeight: 'font-black',
     lineHeight: 'leading-tight',
     letterSpacing: 'tracking-tighter',
   },
-  /** Screen / section heading — 30px / 800 */
   h1: {
+    fontFamily: 'font-display',
     fontSize: 'text-3xl',
-    fontWeight: 'font-extrabold',
     lineHeight: 'leading-tight',
     letterSpacing: 'tracking-tight',
   },
-  /** Card / modal heading — 24px / 700 */
   h2: {
+    fontFamily: 'font-headline',
     fontSize: 'text-2xl',
-    fontWeight: 'font-bold',
     lineHeight: 'leading-snug',
     letterSpacing: 'tracking-tight',
   },
-  /** Sub-section heading — 18px / 600 */
   h3: {
+    fontFamily: 'font-headline',
     fontSize: 'text-lg',
-    fontWeight: 'font-semibold',
     lineHeight: 'leading-snug',
     letterSpacing: 'tracking-tight',
   },
-  /** Body text — 16px / 400 */
   body: {
+    fontFamily: 'font-body',
     fontSize: 'text-base',
-    fontWeight: 'font-normal',
     lineHeight: 'leading-relaxed',
-    letterSpacing: 'tracking-normal',
+    letterSpacing: '',
   },
-  /** Body semibold — 16px / 600 */
   bodySemiBold: {
+    fontFamily: 'font-bodySemibold',
     fontSize: 'text-base',
-    fontWeight: 'font-semibold',
     lineHeight: 'leading-relaxed',
-    letterSpacing: 'tracking-normal',
+    letterSpacing: '',
   },
-  /** Small body — 14px / 400 */
   bodySmall: {
+    fontFamily: 'font-body',
     fontSize: 'text-sm',
-    fontWeight: 'font-normal',
     lineHeight: 'leading-normal',
-    letterSpacing: 'tracking-normal',
+    letterSpacing: '',
   },
-  /** Caption — 12px / 500 */
   caption: {
+    fontFamily: 'font-body',
     fontSize: 'text-xs',
-    fontWeight: 'font-medium',
     lineHeight: 'leading-normal',
     letterSpacing: 'tracking-wide',
   },
-  /** Label / tag — 11px / 700 / uppercase / tracked */
   label: {
+    fontFamily: 'font-label',
     fontSize: 'text-[10px]',
-    fontWeight: 'font-black',
     lineHeight: 'leading-none',
     letterSpacing: 'tracking-[0.2em]',
   },
-  /** Hyperlink — 16px / 400 */
   link: {
+    fontFamily: 'font-bodySemibold',
     fontSize: 'text-base',
-    fontWeight: 'font-semibold',
     lineHeight: 'leading-relaxed',
-    letterSpacing: 'tracking-normal',
+    letterSpacing: '',
   },
 } as const;
 
-// ─── Backward-compat aliases ──────────────────────────────────────────────────
-// These map the old ThemedText type names to equivalent new scale entries so
-// existing screens (index.tsx, etc.) compile without modification.
 export const TypographyAliases = {
   /** @deprecated Use 'h1' instead */
   title:           'h1',

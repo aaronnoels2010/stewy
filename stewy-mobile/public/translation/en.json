@@ -5,14 +5,25 @@
   "volonteer": "Volunteer",
   "volonteers": "Volunteers",
   "welcome": "Welcome",
+  "navigation": {
+    "dashboard": "Dashboard",
+    "games": "Games",
+    "invitations": "Invitations",
+    "volunteers": "Volunteers",
+    "profile": "Profile",
+    "clubManagement": "Club Management"
+  },
   "signIn": {
+    "hero": "UNLEASH THE PITCH",
     "welcomeBack": "Welcome back",
     "subtitle": "The game is waiting. Let's get planning.",
-    "emailLabel": "Email",
+    "emailLabel": "Email Address",
     "passwordLabel": "Password",
     "submit": "Sign In",
+    "forgotPassword": "Forgot Tactical Info?",
     "noAccount": "Don't have an account?",
-    "signUp": "Sign up",
+    "noAccountPitch": "New to the squad?",
+    "signUp": "Register",
     "validation": {
       "required": "Please enter both email and password."
     },
@@ -26,14 +37,26 @@
     "subtitle": "Sign up as a volunteer and start helping out.",
     "firstName": "First name",
     "lastName": "Last name",
-    "email": "Email",
-    "phone": "Phone",
+    "fullName": "Full Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
     "address": "Address",
     "password": "Password",
+    "confirmPassword": "Confirm Password",
     "submit": "Create account",
     "backToSignIn": "Back to sign in",
+    "hero": "Recruit Form",
+    "heroSubtitle": "Join the Elite Club Management System",
+    "alreadyMember": "Already a member?",
+    "signIn": "SIGN IN",
+    "createAccount": "Create Account",
+    "terms": "I agree to the {{termsOfService}} and {{clubRegulations}} regarding player data management and professional conduct.",
+    "termsOfService": "Terms of Service",
+    "clubRegulations": "Club Regulations",
     "validation": {
-      "required": "Please fill in all required fields."
+      "required": "Please fill in all required fields.",
+      "confirmPassword": "Passwords do not match",
+      "terms": "Please agree to the terms and club regulations"
     },
     "error": {
       "generic": "Registration failed. Please try again."
@@ -89,6 +112,79 @@
     },
     "phone": {
       "invalid": "Please enter a valid phone number"
+    }
+  },
+  "header": {
+    "language": "Language"
+  },
+  "createGame": {
+    "title": "Create Game",
+    "homeTeam": "Home Team",
+    "awayTeam": "Away Team",
+    "appointment": "Match Date & Time",
+    "deadline": "RSVP Deadline",
+    "location": "Location / Sector",
+    "accessibility": "Accessibility Notes",
+    "submit": "Create Game",
+    "validation": {
+      "awayTeamRequired": "Please select an away team",
+      "invalidDate": "Please select a valid date",
+      "locationRequired": "Please enter a location",
+      "deadlineMustBeFuture": "Deadline must be in the future",
+      "appointmentAfterDeadline": "Appointment must be after the deadline",
+      "appointmentMustBeFuture": "Appointment must be in the future"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back",
+    "headAdmin": "Head Administrator",
+    "clubAdmin": "Club Admin",
+    "widget": {
+      "pendingUsers": "Pending User Activations",
+      "pendingProfiles": "Pending Volunteer Profiles",
+      "pendingRequests": "Pending Requests",
+      "sentInvitations": "Sent Invitations",
+      "upcomingGames": "Upcoming Games",
+      "myGames": "My Games",
+      "invitations": "Received Invitations",
+      "pendingApprovals": "Pending Approvals"
+    },
+    "stat": {
+      "pendingUsers": {
+        "title": "Pending Users",
+        "description": "New volunteer registrations awaiting your approval and verification.",
+        "action": "Review Users"
+      },
+      "pendingProfiles": {
+        "title": "Pending Profiles",
+        "description": "Security document updates and profile changes require validation.",
+        "action": "Verify Changes"
+      }
+    },
+    "viewAll": "View All",
+    "empty": {
+      "pendingUsers": "No pending activations",
+      "pendingProfiles": "No pending profiles",
+      "pendingRequests": "No pending requests",
+      "sentInvitations": "No pending invitations",
+      "upcomingGames": "No upcoming games",
+      "myGames": "Not yet signed up for games",
+      "invitations": "No pending invitations"
+    },
+    "gameCard": {
+      "confirmed": "Confirmed",
+      "signUp": "Sign Up",
+      "staffNeeded": "Staff Needed",
+      "pending": "Pending"
+    },
+    "assignmentCard": {
+      "downloadBriefing": "Download Briefing",
+      "viewDetails": "View Details"
+    },
+    "reviewCard": {
+      "review": "Review",
+      "sendReminder": "Send Reminder"
     }
   },
   "pendingGate": {

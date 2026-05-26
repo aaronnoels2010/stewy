@@ -5,11 +5,15 @@ import be.an.stewy.stewyapi.controller.GameRegistrationDto;
 import be.an.stewy.stewyapi.controller.Pagination;
 import be.an.stewy.stewyapi.domain.Club;
 import be.an.stewy.stewyapi.domain.Game;
+import be.an.stewy.stewyapi.domain.Volunteer;
+import be.an.stewy.stewyapi.domain.VolunteerGame;
 import be.an.stewy.stewyapi.exception.CustomException;
 import be.an.stewy.stewyapi.mapper.GameDto;
 import be.an.stewy.stewyapi.mapper.GameMapper;
 import be.an.stewy.stewyapi.repository.ClubRepository;
 import be.an.stewy.stewyapi.repository.GameRepository;
+import be.an.stewy.stewyapi.repository.VolunteerGameRepository;
+import be.an.stewy.stewyapi.repository.VolunteerRepository;
 import be.an.stewy.stewyapi.service.GameService;
 import be.an.stewy.stewyapi.utils.ZoneDateTime;
 import org.springframework.data.domain.PageRequest;
@@ -27,11 +31,16 @@ public class GameServiceImpl implements GameService {
     private final GameRepository gameRepository;
     private final GameMapper gameMapper;
     private final ClubRepository clubRepository;
+    private final VolunteerRepository volunteerRepository;
+    private final VolunteerGameRepository volunteerGameRepository;
 
-    public GameServiceImpl(GameRepository gameRepository, GameMapper gameMapper, ClubRepository clubRepository) {
+    public GameServiceImpl(GameRepository gameRepository, GameMapper gameMapper, ClubRepository clubRepository,
+                           VolunteerRepository volunteerRepository, VolunteerGameRepository volunteerGameRepository) {
         this.gameRepository = gameRepository;
         this.gameMapper = gameMapper;
         this.clubRepository = clubRepository;
+        this.volunteerRepository = volunteerRepository;
+        this.volunteerGameRepository = volunteerGameRepository;
     }
 
     @Override
@@ -188,6 +197,22 @@ public class GameServiceImpl implements GameService {
                         + "] when game is in OPEN status. Only location and accessibility are editable.");
             }
         }
+    }
+
+    @Override
+    public List<GameDto> getUpcomingGamesForVolunteer(UUID volunteerId) {
+        Volunteer volunteer = volunteerRepository.findByVolunteerId(volunteerId);
+        if (volunteer == null || volunteer.getClub() == null) return List.of();
+
+        List<Game> openGames = gameRepository.findOpenGamesByClubId(volunteer.getClub().getId());
+        List<UUID> participatedGameIds = volunteerGameRepository.findGamesWithParticipationStatus(volunteerId)
+                .stream().map(VolunteerGame::getGameId).toList();
+
+        return gameMapper.mapGameListToGameDtoList(
+                openGames.stream()
+                        .filter(g -> !participatedGameIds.contains(g.getId()))
+                        .toList()
+        );
     }
 
     /*@Override

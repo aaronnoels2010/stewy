@@ -12,8 +12,8 @@ import { IconSymbol } from './ui/IconSymbol';
 
 interface ThemedTimePickerModalProps {
   visible: boolean;
-  value: string; // HH:MM
-  onChange: (time: string) => void;
+  value: Date | null;
+  onChange: (date: Date) => void;
   onClose: () => void;
 }
 
@@ -31,35 +31,22 @@ export function ThemedTimePickerModal({
   const [selectedHour, setSelectedHour] = useState('12');
   const [selectedMinute, setSelectedMinute] = useState('00');
 
-  // Initialize values when modal becomes visible
   useEffect(() => {
-    if (visible) {
-      const parts = value.split(':');
-      if (parts.length === 2) {
-        const h = parts[0];
-        const m = parts[1];
-        if (HOURS.includes(h)) {
-          setSelectedHour(h);
-        }
-        // Round to nearest 5 for the picker selection
-        const minuteNum = parseInt(m, 10);
-        if (!isNaN(minuteNum)) {
-          const roundedMin = String(Math.round(minuteNum / 5) * 5 % 60).padStart(2, '0');
-          if (MINUTES.includes(roundedMin)) {
-            setSelectedMinute(roundedMin);
-          } else {
-            setSelectedMinute('00');
-          }
-        }
-      } else {
-        setSelectedHour('12');
-        setSelectedMinute('00');
-      }
+    if (visible && value) {
+      setSelectedHour(String(value.getHours()).padStart(2, '0'));
+      const roundedMin = String(Math.round(value.getMinutes() / 5) * 5 % 60).padStart(2, '0');
+      setSelectedMinute(roundedMin);
+    } else if (visible && !value) {
+      setSelectedHour('12');
+      setSelectedMinute('00');
     }
   }, [visible, value]);
 
   const handleConfirm = () => {
-    onChange(`${selectedHour}:${selectedMinute}`);
+    const baseDate = value || new Date();
+    const date = new Date(baseDate);
+    date.setHours(parseInt(selectedHour, 10), parseInt(selectedMinute, 10), 0, 0);
+    onChange(date);
     onClose();
   };
 
@@ -84,7 +71,6 @@ export function ThemedTimePickerModal({
           style={{ backgroundColor: modalBg }}
           onPress={(e) => e.stopPropagation()}
         >
-          {/* Modal Header */}
           <View className="flex-row justify-between items-center mb-4">
             <Text style={{ color: headerTextColor }} className="text-lg font-bold">
               Select Time
@@ -94,9 +80,7 @@ export function ThemedTimePickerModal({
             </TouchableOpacity>
           </View>
 
-          {/* Time Picker Columns */}
           <View className="flex-row h-56 justify-center items-stretch my-2 border-y border-gray-100 dark:border-zinc-800 py-3">
-            {/* Hours Column */}
             <View className="flex-1 items-center">
               <Text style={{ color: colors.textMuted }} className="text-xs font-bold uppercase mb-2">
                 Hour
@@ -135,10 +119,8 @@ export function ThemedTimePickerModal({
               </ScrollView>
             </View>
 
-            {/* Separator */}
             <View className="w-[1px] bg-gray-100 dark:bg-zinc-800 self-stretch my-2 mx-1" />
 
-            {/* Minutes Column */}
             <View className="flex-1 items-center">
               <Text style={{ color: colors.textMuted }} className="text-xs font-bold uppercase mb-2">
                 Minute
@@ -178,7 +160,6 @@ export function ThemedTimePickerModal({
             </View>
           </View>
 
-          {/* Bottom Actions */}
           <View className="flex-row justify-between items-center mt-4">
             <TouchableOpacity
               onPress={onClose}

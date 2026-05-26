@@ -1,5 +1,5 @@
 import * as React from 'react';
-import renderer from 'react-test-renderer';
+import { act, create } from 'react-test-renderer';
 import { SearchableCombobox } from '../SearchableCombobox';
 
 const options = [
@@ -8,9 +8,15 @@ const options = [
   { id: '3', clubName: 'AC Milan' },
 ];
 
+function render(el: React.ReactElement) {
+  let root: ReturnType<typeof create>;
+  act(() => { root = create(el); });
+  return root!;
+}
+
 describe('SearchableCombobox', () => {
   it('renders with options', () => {
-    const tree = renderer.create(
+    const tree = render(
       <SearchableCombobox
         options={options}
         value=""
@@ -22,7 +28,7 @@ describe('SearchableCombobox', () => {
   });
 
   it('renders loading state', () => {
-    const tree = renderer.create(
+    const tree = render(
       <SearchableCombobox
         options={[]}
         value=""
@@ -35,7 +41,7 @@ describe('SearchableCombobox', () => {
   });
 
   it('renders empty state', () => {
-    const tree = renderer.create(
+    const tree = render(
       <SearchableCombobox
         options={[]}
         value=""
@@ -48,7 +54,7 @@ describe('SearchableCombobox', () => {
   });
 
   it('renders error state', () => {
-    const tree = renderer.create(
+    const tree = render(
       <SearchableCombobox
         options={[]}
         value=""
@@ -61,7 +67,7 @@ describe('SearchableCombobox', () => {
   });
 
   it('renders create-new option when allowCreate is true', () => {
-    const tree = renderer.create(
+    const tree = render(
       <SearchableCombobox
         options={options}
         value=""

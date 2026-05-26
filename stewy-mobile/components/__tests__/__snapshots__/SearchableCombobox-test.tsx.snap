@@ -1,11 +1,266 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SearchableCombobox renders create-new option when allowCreate is true 1`] = `null`;
+exports[`SearchableCombobox renders create-new option when allowCreate is true 1`] = `
+<View
+  className="relative"
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+  >
+    <Text
+      className="text-base text-zinc-400"
+    >
+      Search clubs...
+    </Text>
+    <Text
+      className="text-zinc-400"
+    >
+      ▼
+    </Text>
+  </View>
+</View>
+`;
 
-exports[`SearchableCombobox renders empty state 1`] = `null`;
+exports[`SearchableCombobox renders empty state 1`] = `
+<View
+  className="relative"
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+  >
+    <Text
+      className="text-base text-zinc-400"
+    >
+      Search clubs...
+    </Text>
+    <Text
+      className="text-zinc-400"
+    >
+      ▼
+    </Text>
+  </View>
+</View>
+`;
 
-exports[`SearchableCombobox renders error state 1`] = `null`;
+exports[`SearchableCombobox renders error state 1`] = `
+<View
+  className="relative"
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+  >
+    <Text
+      className="text-base text-zinc-400"
+    >
+      Search clubs...
+    </Text>
+    <Text
+      className="text-zinc-400"
+    >
+      ▼
+    </Text>
+  </View>
+  <Text
+    className="text-red-500 text-sm mt-1"
+  >
+    Failed to load clubs
+  </Text>
+</View>
+`;
 
-exports[`SearchableCombobox renders loading state 1`] = `null`;
+exports[`SearchableCombobox renders loading state 1`] = `
+<View
+  className="relative"
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+  >
+    <Text
+      className="text-base text-zinc-400"
+    >
+      Search clubs...
+    </Text>
+    <Text
+      className="text-zinc-400"
+    >
+      ▼
+    </Text>
+  </View>
+</View>
+`;
 
-exports[`SearchableCombobox renders with options 1`] = `null`;
+exports[`SearchableCombobox renders with options 1`] = `
+<View
+  className="relative"
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+  >
+    <Text
+      className="text-base text-zinc-400"
+    >
+      Search clubs...
+    </Text>
+    <Text
+      className="text-zinc-400"
+    >
+      ▼
+    </Text>
+  </View>
+</View>
+`;

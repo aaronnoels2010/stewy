@@ -1,19 +1,3 @@
-/**
- * Stewy Design System — ThemedInput
- *
- * A controlled text input that respects the active color scheme. Supports
- * labels, hint text, error state, and leading/trailing icon slots.
- *
- * @example
- * <ThemedInput
- *   label="Email"
- *   placeholder="Enter your email"
- *   value={email}
- *   onChangeText={setEmail}
- *   leadingIcon={<IconSymbol name="envelope" size={18} color="#6B8060" />}
- * />
- * <ThemedInput label="Password" error="Invalid password" secureTextEntry />
- */
 import React, { useState } from 'react';
 import {
   View,
@@ -25,16 +9,15 @@ import {
 import { useDesignTokens } from '@/hooks/useDesignTokens';
 
 export type ThemedInputProps = TextInputProps & {
-  /** Label shown above the input */
   label?: string;
-  /** Helper text shown below the input */
   hint?: string;
-  /** Error message — replaces hint and turns border red */
   error?: string;
-  /** Icon rendered on the left inside the input */
   leadingIcon?: React.ReactNode;
-  /** Icon rendered on the right inside the input */
   trailingIcon?: React.ReactNode;
+  /** Apply uppercase style to label */
+  uppercaseLabel?: boolean;
+  /** Label font size variant */
+  labelSize?: 'sm' | 'md';
 };
 
 export function ThemedInput({
@@ -43,6 +26,8 @@ export function ThemedInput({
   error,
   leadingIcon,
   trailingIcon,
+  uppercaseLabel = false,
+  labelSize = 'sm',
   style,
   className = '',
   ...rest
@@ -52,7 +37,6 @@ export function ThemedInput({
 
   const hasError = !!error;
 
-  // Border color selection
   const borderColor = hasError
     ? colors.danger
     : focused
@@ -65,25 +49,27 @@ export function ThemedInput({
   const labelColor = hasError ? colors.danger : colors.textMuted;
 
   return (
-    <View className={`mb-1 ${className}`}>
-      {/* Label */}
+    <View className={`${className}`}>
       {label && (
         <Text
           style={{ color: labelColor }}
-          className="text-sm font-semibold mb-1.5 ml-1"
+          className={`
+            ${labelSize === 'sm' ? 'text-xs' : 'text-sm'}
+            font-semibold mb-1.5 ml-1
+            ${uppercaseLabel ? 'uppercase tracking-wider' : ''}
+          `.trim()}
         >
           {label}
         </Text>
       )}
 
-      {/* Input row */}
       <View
         style={{
           backgroundColor: inputBg,
           borderColor,
           borderWidth: focused || hasError ? 1.5 : 1,
         }}
-        className="flex-row items-center rounded-2xl overflow-hidden"
+        className="flex-row items-center rounded-pitch-md overflow-hidden"
       >
         {leadingIcon && (
           <View className="pl-4 pr-1">{leadingIcon}</View>
@@ -97,7 +83,12 @@ export function ThemedInput({
             style,
           ]}
           placeholderTextColor={placeholderColor}
-          className={`py-4 ${leadingIcon ? 'pl-2' : 'pl-5'} ${trailingIcon ? 'pr-2' : 'pr-5'} text-base outline-none`}
+          className={`
+            py-4 text-base
+            ${leadingIcon ? 'pl-2' : 'pl-5'}
+            ${trailingIcon ? 'pr-2' : 'pr-5'}
+            outline-none
+          `.trim()}
           onFocus={(e) => {
             setFocused(true);
             rest.onFocus?.(e);
@@ -113,7 +104,6 @@ export function ThemedInput({
         )}
       </View>
 
-      {/* Hint / Error */}
       {(hint || error) && (
         <Text
           style={{ color: hasError ? colors.danger : colors.textMuted }}

@@ -1,6 +1,7 @@
 package be.an.stewy.stewyapi;
 
 import be.an.stewy.stewyapi.security.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,6 +21,9 @@ public class WebSecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    @Value("${cors.allowed-origins}")
+    private String[] allowedOrigins;
+
     public WebSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
@@ -35,7 +39,7 @@ public class WebSecurityConfig {
                 .cors(cors ->
                         cors.configurationSource(request -> {
                             CorsConfiguration config = new CorsConfiguration();
-                            config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8081", "http://localhost:19006"));
+                            config.setAllowedOrigins(List.of(allowedOrigins));
                             config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                             config.setAllowCredentials(true);
                             config.addAllowedHeader("*");

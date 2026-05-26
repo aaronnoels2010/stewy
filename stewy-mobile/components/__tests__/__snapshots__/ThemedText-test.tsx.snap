@@ -2,7 +2,7 @@
 
 exports[`renders correctly 1`] = `
 <Text
-  className="text-[#0F172A] text-base font-normal leading-relaxed tracking-normal"
+  className="text-[#111C2D] font-body text-base leading-relaxed"
 >
   Snapshot test!
 </Text>

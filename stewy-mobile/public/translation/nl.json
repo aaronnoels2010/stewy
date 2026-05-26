@@ -1,15 +1,28 @@
 {
   "click-here": "Klik hier",
+  "volunteer": "Vrijwilliger",
+  "volunteers": "Vrijwilligers",
   "volonteer": "Vrijwilliger",
   "volonteers": "Vrijwilligers",
   "welcome": "Welkom",
+  "navigation": {
+    "dashboard": "Dashboard",
+    "games": "Wedstrijden",
+    "invitations": "Uitnodigingen",
+    "volunteers": "Vrijwilligers",
+    "profile": "Profiel",
+    "clubManagement": "Clubbeheer"
+  },
   "signIn": {
+    "hero": "ONTSTEK DE PITCH",
     "welcomeBack": "Welkom terug",
     "subtitle": "Het spel wacht. Laten we plannen.",
-    "emailLabel": "E-mail",
+    "emailLabel": "E-mailadres",
     "passwordLabel": "Wachtwoord",
     "submit": "Inloggen",
+    "forgotPassword": "Tactische info vergeten?",
     "noAccount": "Nog geen account?",
+    "noAccountPitch": "Nieuw bij de ploeg?",
     "signUp": "Registreren",
     "validation": {
       "required": "Voer zowel e-mail als wachtwoord in."
@@ -24,14 +37,26 @@
     "subtitle": "Registreer als vrijwilliger en help mee.",
     "firstName": "Voornaam",
     "lastName": "Achternaam",
-    "email": "E-mail",
-    "phone": "Telefoon",
+    "fullName": "Volledige Naam",
+    "email": "E-mailadres",
+    "phone": "Telefoonnummer",
     "address": "Adres",
     "password": "Wachtwoord",
+    "confirmPassword": "Bevestig Wachtwoord",
     "submit": "Account aanmaken",
     "backToSignIn": "Terug naar inloggen",
+    "hero": "Wervingsformulier",
+    "heroSubtitle": "Word lid van het Elite Club Management Systeem",
+    "alreadyMember": "Al lid?",
+    "signIn": "INLOGGEN",
+    "createAccount": "Account Aanmaken",
+    "terms": "Ik ga akkoord met de {{termsOfService}} en {{clubRegulations}} met betrekking tot spelersgegevensbeheer en professioneel gedrag.",
+    "termsOfService": "Servicevoorwaarden",
+    "clubRegulations": "Clubreglement",
     "validation": {
-      "required": "Vul alle verplichte velden in."
+      "required": "Vul alle verplichte velden in.",
+      "confirmPassword": "Wachtwoorden komen niet overeen",
+      "terms": "Ga akkoord met de voorwaarden en het clubreglement"
     },
     "error": {
       "generic": "Registratie mislukt. Probeer het opnieuw."
@@ -74,6 +99,93 @@
     "rejectTitle": "Profiel afwijzen",
     "rejectMessage": "Weet je zeker dat je dit profiel wilt afwijzen?",
     "cancel": "Annuleren"
+  },
+  "validation": {
+    "email": {
+      "invalid": "Voer een geldig e-mailadres in"
+    },
+    "password": {
+      "minLength": "Wachtwoord moet minimaal 8 tekens bevatten",
+      "uppercase": "Wachtwoord moet een hoofdletter bevatten",
+      "lowercase": "Wachtwoord moet een kleine letter bevatten",
+      "digit": "Wachtwoord moet een cijfer bevatten"
+    },
+    "phone": {
+      "invalid": "Voer een geldig telefoonnummer in"
+    }
+  },
+  "header": {
+    "language": "Taal"
+  },
+  "createGame": {
+    "title": "Wedstrijd aanmaken",
+    "homeTeam": "Thuisploeg",
+    "awayTeam": "Uitploeg",
+    "appointment": "Wedstrijddatum & -tijd",
+    "deadline": "Uiterlijke aanmelddatum",
+    "location": "Locatie / Sector",
+    "accessibility": "Toegankelijkheidsnotities",
+    "submit": "Wedstrijd aanmaken",
+    "validation": {
+      "awayTeamRequired": "Selecteer een uitploeg",
+      "invalidDate": "Selecteer een geldige datum",
+      "locationRequired": "Voer een locatie in",
+      "deadlineMustBeFuture": "Uiterlijke datum moet in de toekomst zijn",
+      "appointmentAfterDeadline": "Afspraak moet na de uiterlijke datum zijn",
+      "appointmentMustBeFuture": "Afspraak moet in de toekomst zijn"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welkom terug",
+    "headAdmin": "Hoofdbeheerder",
+    "clubAdmin": "Clubbeheerder",
+    "widget": {
+      "pendingUsers": "Openstaande gebruikersactivaties",
+      "pendingProfiles": "Openstaande vrijwilligersprofielen",
+      "pendingRequests": "Openstaande verzoeken",
+      "sentInvitations": "Verzonden uitnodigingen",
+      "upcomingGames": "Aankomende spelen",
+      "myGames": "Mijn spelen",
+      "invitations": "Ontvangen uitnodigingen",
+      "pendingApprovals": "Openstaande goedkeuringen"
+    },
+    "stat": {
+      "pendingUsers": {
+        "title": "Openstaande gebruikers",
+        "description": "Nieuwe vrijwilligersregistraties wachten op goedkeuring.",
+        "action": "Bekijk gebruikers"
+      },
+      "pendingProfiles": {
+        "title": "Openstaande profielen",
+        "description": "Documentupdates en profielwijzigingen vereisen validatie.",
+        "action": "Controleer wijzigingen"
+      }
+    },
+    "viewAll": "Bekijk alles",
+    "empty": {
+      "pendingUsers": "Geen openstaande activaties",
+      "pendingProfiles": "Geen openstaande profielen",
+      "pendingRequests": "Geen openstaande verzoeken",
+      "sentInvitations": "Geen openstaande uitnodigingen",
+      "upcomingGames": "Geen aankomende spelen",
+      "myGames": "Nog niet ingeschreven voor spelen",
+      "invitations": "Geen openstaande uitnodigingen"
+    },
+    "gameCard": {
+      "confirmed": "Bevestigd",
+      "signUp": "Inschrijven",
+      "staffNeeded": "Personeel nodig",
+      "pending": "In afwachting"
+    },
+    "assignmentCard": {
+      "downloadBriefing": "Briefing downloaden",
+      "viewDetails": "Details bekijken"
+    },
+    "reviewCard": {
+      "review": "Beoordelen",
+      "sendReminder": "Herinnering sturen"
+    }
   },
   "pendingGate": {
     "title": "Account in afwachting",

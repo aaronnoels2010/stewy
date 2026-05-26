@@ -60,4 +60,22 @@ public class AuthorizationService {
         }
         return checkHoofdSteward(authentication, game.getHomeTeam().getId());
     }
+
+    public Volunteer checkHoofdStewardForVolunteer(Authentication authentication, UUID targetVolunteerId) {
+        Volunteer hoofdSteward = getCurrentVolunteer(authentication);
+        if (hoofdSteward.getRole() != VolunteerRole.HOOFD_STEWARD) {
+            throw new AccessDeniedException("Hoofd steward access required");
+        }
+
+        Volunteer targetVolunteer = volunteerRepository.findByVolunteerId(targetVolunteerId);
+        if (targetVolunteer == null) {
+            throw new AccessDeniedException("Target volunteer not found");
+        }
+        if (targetVolunteer.getClub() == null || hoofdSteward.getClub() == null
+                || !targetVolunteer.getClub().getId().equals(hoofdSteward.getClub().getId())) {
+            throw new AccessDeniedException("Not authorized for this volunteer's club");
+        }
+
+        return hoofdSteward;
+    }
 }

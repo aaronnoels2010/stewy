@@ -14,32 +14,24 @@ import { useDesignTokens } from '@/hooks/useDesignTokens';
 import { useGames } from '@/contexts/games.context';
 import { useSession } from '@/contexts/auth.context';
 import { gameService } from '@/services/game.service';
-import { volunteerService } from '@/services/volunteer.service';
 import type { GameDto } from '@/types/api';
 
 export default function GamesScreen() {
   const { games, isLoading, error } = useGames();
   const { isDark, colors } = useDesignTokens();
-  const { isAdmin } = useSession();
+  const { isHoofdSteward, isProfileApproved } = useSession();
   const [myGames, setMyGames] = useState<GameDto[]>([]);
   const [myGamesLoading, setMyGamesLoading] = useState(false);
-  const [isHoofdSteward, setIsHoofdSteward] = useState(false);
 
   useEffect(() => {
-    volunteerService.getMyProfile()
-      .then((p) => setIsHoofdSteward(p.role === 'HOOFD_STEWARD' || isAdmin))
-      .catch(() => setIsHoofdSteward(isAdmin));
-  }, [isAdmin]);
-
-  useEffect(() => {
-    if (isHoofdSteward) {
+    if (isHoofdSteward && isProfileApproved) {
       setMyGamesLoading(true);
       gameService.getMyClubGames()
         .then((res) => setMyGames(res.items as GameDto[]))
         .catch(() => {})
         .finally(() => setMyGamesLoading(false));
     }
-  }, [isHoofdSteward]);
+  }, [isHoofdSteward, isProfileApproved]);
 
   return (
     <SafeAreaView
@@ -56,7 +48,7 @@ export default function GamesScreen() {
             Manage your team's matches
           </ThemedText>
         </View>
-        {isHoofdSteward && (
+        {isProfileApproved && isHoofdSteward && (
           <ThemedButton
             label="Create"
             variant="primary"
@@ -73,7 +65,7 @@ export default function GamesScreen() {
         contentContainerStyle={{ paddingBottom: 100 }}
       >
         {/* My Club Games (HoofdSteward only) */}
-        {isHoofdSteward && (
+        {isProfileApproved && isHoofdSteward && (
           <View className="mb-6">
             <ThemedText type="h3" className="mb-4">
               My Club Games

@@ -1,189 +1,791 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Image, Animated, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedButton } from '@/components/ThemedButton';
-import { ThemedView } from '@/components/ThemedView';
-import { ThemedCard } from '@/components/ThemedCard';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import { useDesignTokens } from '@/hooks/useDesignTokens';
-import { LinearGradient } from 'expo-linear-gradient';
+import { useEffect, useState, useCallback } from "react";
+import { View, ScrollView, ActivityIndicator } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedCard } from "@/components/ThemedCard";
+import { ThemedButton } from "@/components/ThemedButton";
+import { ThemedBadge } from "@/components/ThemedBadge";
+import { BaseWidget } from "@/components/dashboard/BaseWidget";
+import { StatCard } from "@/components/dashboard/StatCard";
+import { GameCard } from "@/components/dashboard/GameCard";
+import { AssignmentCard } from "@/components/dashboard/AssignmentCard";
+import { ReviewCard } from "@/components/dashboard/ReviewCard";
+import { useTranslation } from "react-i18next";
+import { useSession } from "@/contexts/auth.context";
+import { usePlatform } from "@/hooks/usePlatform";
+import { useDesignTokens } from "@/hooks/useDesignTokens";
+import { adminService } from "@/services/admin.service";
+import { gameService } from "@/services/game.service";
+import { volunteerService } from "@/services/volunteer.service";
+import { participationService } from "@/services/participation.service";
+import { api } from "@/services/api";
+import { useRouter } from "expo-router";
+import type {
+  UserDto,
+  VolunteerProfileResponse,
+  VolunteerGameEntry,
+  GameDto,
+} from "@/types/api";
 
-export default function HomeScreen() {
+interface ProfileEntry {
+  id: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  kbvbId: string;
+  club: { id: string; clubName: string } | null;
+  profileStatus: string;
+}
+
+export default function DashboardScreen() {
+  const { t } = useTranslation();
+  const { isAdmin, user, profile: contextProfile } = useSession();
+  const { isMobile } = usePlatform();
+  const { colors } = useDesignTokens();
   const router = useRouter();
-  const { colors, isDark } = useDesignTokens();
-  const insets = useSafeAreaInsets();
-  
-  // Use regular ScrollView for now to eliminate animation issues
-  // Re-enable animations once scrolling is confirmed
-  
+
+  const [profile, setProfile] = useState<VolunteerProfileResponse | null>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
+
+  const [pendingUsers, setPendingUsers] = useState<UserDto[]>([]);
+  const [pendingProfiles, setPendingProfiles] = useState<ProfileEntry[]>([]);
+  const [activeVolunteers, setActiveVolunteers] = useState<ProfileEntry[]>([]);
+
+  const [upcomingGames, setUpcomingGames] = useState<GameDto[]>([]);
+  const [clubGames, setClubGames] = useState<GameDto[]>([]);
+  const [myGames, setMyGames] = useState<GameDto[]>([]);
+  const [invitations, setInvitations] = useState<VolunteerGameEntry[]>([]);
+  const [pendingApprovals, setPendingApprovals] = useState<
+    VolunteerProfileResponse[]
+  >([]);
+  const [hsPendingRequests, setHsPendingRequests] = useState<
+    VolunteerGameEntry[]
+  >([]);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (isAdmin) {
+      setProfileLoading(false);
+      setLoading(true);
+      Promise.all([
+        adminService.getPendingUsers(),
+        api.get<{ pending: ProfileEntry[]; approved: ProfileEntry[] }>(
+          "/volunteers/profiles",
+        ),
+        gameService.getGames(),
+      ])
+        .then(([users, profiles, gamesData]) => {
+          setPendingUsers(users);
+          setPendingProfiles(profiles.pending);
+          setActiveVolunteers(profiles.approved);
+          setUpcomingGames(gamesData.items ?? []);
+        })
+        .catch(() => {})
+        .finally(() => setLoading(false));
+    } else if (contextProfile) {
+      setProfile(contextProfile);
+      setProfileLoading(false);
+      setLoading(true);
+      const role = contextProfile.role;
+      const isHs = role === "HOOFD_STEWARD";
+      const isSteward = role === "STEWARD" || role === "DEVISIE_CHEF";
+
+      const promises: Promise<unknown>[] = [];
+
+      if (isHs) {
+        promises.push(
+          gameService.getMyClubGames().then((d) => setClubGames(d.items ?? [])),
+          volunteerService.getPendingProfilesByClub().then(setPendingApprovals),
+          participationService
+            .getPendingRequestsForClub()
+            .then(setHsPendingRequests),
+        );
+      }
+
+      if (isSteward || isHs) {
+        promises.push(
+          gameService.getUpcomingGames().then(setMyGames),
+          participationService.getMyInvitations().then(setInvitations),
+        );
+      }
+
+      promises.push(
+        gameService.getGames().then((d) => setUpcomingGames(d.items ?? [])),
+      );
+
+      Promise.all(promises)
+        .catch(() => {})
+        .finally(() => setLoading(false));
+    } else {
+      setProfileLoading(false);
+      setLoading(false);
+    }
+  }, [isAdmin, contextProfile]);
+
+  const handleActivateUser = useCallback(async (userId: string) => {
+    try {
+      await adminService.activateUser(userId);
+      setPendingUsers((prev) => prev.filter((u) => u.id !== userId));
+    } catch {}
+  }, []);
+
+  const handleApproveProfile = useCallback(async (volunteerId: string) => {
+    try {
+      await adminService.approveProfile(volunteerId);
+      setPendingProfiles((prev) => prev.filter((p) => p.id !== volunteerId));
+    } catch {}
+  }, []);
+
+  const handleRejectProfile = useCallback(async (volunteerId: string) => {
+    try {
+      await adminService.rejectProfile(volunteerId);
+      setPendingProfiles((prev) => prev.filter((p) => p.id !== volunteerId));
+    } catch {}
+  }, []);
+
+  const role = profile?.role;
+  const isHoofdSteward = role === "HOOFD_STEWARD";
+  const isStewardOrDc = role === "STEWARD" || role === "DEVISIE_CHEF";
+
+  if (loading || profileLoading) {
+    return (
+      <SafeAreaView className="flex-1" edges={["top"]}>
+        <ThemedView className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" color={colors.accent} />
+        </ThemedView>
+      </SafeAreaView>
+    );
+  }
+
+  if (isMobile) {
+    return (
+      <MobileDashboard
+        isAdmin={isAdmin}
+        isHoofdSteward={isHoofdSteward}
+        isStewardOrDc={isStewardOrDc}
+        user={user}
+        pendingUsers={pendingUsers}
+        pendingProfiles={pendingProfiles}
+        activeVolunteers={activeVolunteers}
+        upcomingGames={upcomingGames}
+        clubGames={clubGames}
+        myGames={myGames}
+        invitations={invitations}
+        pendingApprovals={pendingApprovals}
+        hsPendingRequests={hsPendingRequests}
+        onActivateUser={handleActivateUser}
+        onApproveProfile={handleApproveProfile}
+        onRejectProfile={handleRejectProfile}
+        colors={colors}
+        t={t}
+        router={router}
+      />
+    );
+  }
+
   return (
-    <ThemedView style={{ flex: 1 }}>
-      <ScrollView 
-        style={{ flex: 1 }}
-        contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* --- HERO SECTION --- */}
-        <View style={{ height: 800, width: '100%' }}>
-          <View style={StyleSheet.absoluteFill}>
-            <Image
-              source={require('@/assets/images/soccer_hero.png')}
-              style={styles.heroImage}
-              resizeMode="cover"
-            />
-            <LinearGradient
-              colors={isDark ? ['rgba(9,9,11,0.2)', 'rgba(9,9,11,0.8)', '#09090B'] : ['rgba(248,250,252,0.1)', 'rgba(248,250,252,0.7)', '#F8FAFC']}
-              style={StyleSheet.absoluteFill}
-            />
-          </View>
+    <DesktopDashboard
+      isAdmin={isAdmin}
+      isHoofdSteward={isHoofdSteward}
+      isStewardOrDc={isStewardOrDc}
+      user={user}
+      pendingUsers={pendingUsers}
+      pendingProfiles={pendingProfiles}
+      activeVolunteers={activeVolunteers}
+      upcomingGames={upcomingGames}
+      clubGames={clubGames}
+      myGames={myGames}
+      invitations={invitations}
+      pendingApprovals={pendingApprovals}
+      hsPendingRequests={hsPendingRequests}
+      onActivateUser={handleActivateUser}
+      onApproveProfile={handleApproveProfile}
+      onRejectProfile={handleRejectProfile}
+      colors={colors}
+      t={t}
+      router={router}
+    />
+  );
+}
 
-          {/* Hero Content */}
-          <View style={{ flex: 1, paddingHorizontal: 32, justifyContent: 'flex-end', paddingBottom: 96, paddingTop: insets.top }}>
-            <View className="flex-row items-center mb-8">
-              <View className="px-5 py-2 rounded-full border border-accent-500/40 bg-accent-500/10">
-                <ThemedText type="label" accent>EDITION 2026</ThemedText>
-              </View>
-              <View className="h-[1px] flex-1 bg-accent-500/20 ml-6" />
-            </View>
+interface DashboardProps {
+  isAdmin: boolean;
+  isHoofdSteward: boolean;
+  isStewardOrDc: boolean;
+  user: { firstName?: string; lastName?: string } | null;
+  pendingUsers: UserDto[];
+  pendingProfiles: ProfileEntry[];
+  activeVolunteers: ProfileEntry[];
+  upcomingGames: GameDto[];
+  clubGames: GameDto[];
+  myGames: GameDto[];
+  invitations: VolunteerGameEntry[];
+  pendingApprovals: VolunteerProfileResponse[];
+  hsPendingRequests: VolunteerGameEntry[];
+  onActivateUser: (id: string) => void;
+  onApproveProfile: (id: string) => void;
+  onRejectProfile: (id: string) => void;
+  colors: Record<string, string>;
+  t: (key: string) => string;
+  router: ReturnType<typeof useRouter>;
+}
 
-            <ThemedText 
-              type="display" 
-              className="text-[80px] leading-[72px] mb-4 tracking-tighter italic"
-              style={{ color: isDark ? '#FFF' : '#0F172A', fontWeight: '900' }}
-            >
-              UNLEASH{'\n'}
-              THE PITCH.
-            </ThemedText>
+function DesktopDashboard({
+  isAdmin,
+  isHoofdSteward,
+  isStewardOrDc,
+  user,
+  pendingUsers,
+  pendingProfiles,
+  activeVolunteers,
+  upcomingGames,
+  clubGames,
+  myGames,
+  invitations,
+  pendingApprovals,
+  hsPendingRequests,
+  onActivateUser,
+  onApproveProfile,
+  onRejectProfile,
+  colors,
+  t,
+  router,
+}: DashboardProps) {
+  return (
+    <ScrollView className="flex-1 p-8" showsVerticalScrollIndicator={false}>
+      <ThemedView className="max-w-4xl mx-auto w-full gap-8">
+        <WelcomeSection
+          name={`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}
+          isAdmin={isAdmin}
+          t={t}
+          colors={colors}
+        />
 
-            <View className="flex-row items-start gap-5 mb-12">
-              <View className="w-1.5 h-24 bg-accent-500 rounded-full" />
-              <ThemedText 
-                type="h2" 
-                variant="muted" 
-                className="flex-1 text-2xl leading-8"
-                style={{ opacity: 0.9 }}
-              >
-                Premium match management for the modern athlete. 
-                Every game, every volunteer, every stat—curated.
-              </ThemedText>
-            </View>
-
-            <View className="flex-row gap-5">
-              <ThemedButton
-                label="Get Started"
-                variant="primary"
-                size="lg"
-                onPress={() => router.push('/games')}
-                className="flex-1 py-6 rounded-[32px] shadow-accent-lg"
-              />
-              <TouchableOpacity 
-                activeOpacity={0.8}
-                className="w-20 h-20 items-center justify-center rounded-[32px] bg-white/10 dark:bg-zinc-800/60 border border-white/20 dark:border-zinc-700/60"
-              >
-                <IconSymbol name="play.fill" size={28} color={isDark ? '#FFF' : colors.text} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-
-        {/* --- BOLD STATS OVERLAY --- */}
-        <View className="px-8 -mt-12 z-20">
-          <ThemedCard className="flex-row justify-between py-10 px-6 bg-zinc-950 dark:bg-white border-none shadow-premium-lg rounded-[40px]">
-            <View className="items-center flex-1 border-r border-zinc-800 dark:border-zinc-100">
-              <ThemedText type="display" style={{ color: isDark ? '#FFF' : '#000', fontSize: 36 }}>12K+</ThemedText>
-              <ThemedText type="caption" variant="muted" className="mt-1">MATCHES</ThemedText>
-            </View>
-            <View className="items-center flex-1 border-r border-zinc-800 dark:border-zinc-100">
-              <ThemedText type="display" style={{ color: colors.accent, fontSize: 36 }}>98%</ThemedText>
-              <ThemedText type="caption" variant="muted" className="mt-1">SUCCESS</ThemedText>
-            </View>
-            <View className="items-center flex-1">
-              <ThemedText type="display" style={{ color: isDark ? '#FFF' : '#000', fontSize: 36 }}>250</ThemedText>
-              <ThemedText type="caption" variant="muted" className="mt-1">REFS</ThemedText>
-            </View>
-          </ThemedCard>
-        </View>
-
-        {/* --- THE STEWY EDGE --- */}
-        <View className="px-8 pt-32">
-          <View className="mb-16">
-            <ThemedText type="label" accent className="mb-4">THE STEWY EDGE</ThemedText>
-            <ThemedText type="h1" className="text-5xl leading-tight">Engineered for{'\n'}High Performance.</ThemedText>
-          </View>
-
-          <View className="gap-16">
-            <View className="flex-row gap-8">
-              <View className="flex-1 pt-10">
-                <View className="w-16 h-16 rounded-3xl bg-accent-500 items-center justify-center mb-8 shadow-accent-md">
-                  <IconSymbol name="calendar" size={32} color="#FFF" />
-                </View>
-                <ThemedText type="h1" style={{ fontSize: 28 }} className="mb-4">Dynamic Planner</ThemedText>
-                <ThemedText type="body" variant="muted" className="text-lg leading-7">
-                  Adaptive scheduling that learns your team's rhythm. Real-time pitch availability at your fingertips.
-                </ThemedText>
-              </View>
-              <View className="w-2/5 bg-zinc-100 dark:bg-zinc-900 rounded-[50px] h-[320] overflow-hidden justify-center items-center">
-                <View className="absolute top-10 right-[-30] w-48 h-48 bg-accent-500/20 rounded-full" />
-                <IconSymbol name="calendar.badge.plus" size={100} color={isDark ? '#27272A' : '#E2E8F0'} />
-              </View>
-            </View>
-
-            <View className="flex-row gap-8">
-              <View className="w-2/5 bg-zinc-100 dark:bg-zinc-900 rounded-[50px] h-[320] overflow-hidden justify-center items-center">
-                <View className="absolute bottom-10 left-[-30] w-48 h-48 bg-blue-500/20 rounded-full" />
-                <IconSymbol name="person.3.fill" size={120} color={isDark ? '#27272A' : '#E2E8F0'} />
-              </View>
-              <View className="flex-1 pt-10">
-                <View className="w-16 h-16 rounded-3xl bg-blue-500 items-center justify-center mb-8 shadow-lg shadow-blue-500/30">
-                  <IconSymbol name="person.3" size={32} color="#FFF" />
-                </View>
-                <ThemedText type="h1" style={{ fontSize: 28 }} className="mb-4">Elite Network</ThemedText>
-                <ThemedText type="body" variant="muted" className="text-lg leading-7">
-                  Instant access to verified referees and certified coaches. Professional standards, every match day.
-                </ThemedText>
-              </View>
-            </View>
-
-            <ThemedCard className="bg-accent-500 p-12 border-none overflow-hidden h-[450px] justify-end rounded-[60px] shadow-accent-lg">
-              <View className="absolute top-[-80] right-[-80] w-[400] h-[400] bg-white/10 rounded-full" />
-              <IconSymbol name="chart.bar.fill" size={180} color="rgba(255,255,255,0.12)" className="absolute top-12 left-12" />
-              
-              <ThemedText type="display" className="text-white text-6xl mb-6 italic" style={{ fontWeight: '900' }}>STATS OVER{'\n'}EVERYTHING.</ThemedText>
-              <ThemedText type="body" className="text-white/80 text-xl mb-10 leading-8">
-                Pro-level insights for amateur leagues. Track goals, assists, and performance metrics in real-time.
-              </ThemedText>
-              <View className="flex-row">
-                <TouchableOpacity className="bg-white px-10 py-5 rounded-full shadow-lg">
-                  <ThemedText type="bodySemiBold" style={{ color: colors.accent }}>View Analytics</ThemedText>
-                </TouchableOpacity>
-              </View>
-            </ThemedCard>
-          </View>
-        </View>
-
-        <View className="px-8 py-40 items-center bg-zinc-50 dark:bg-zinc-950 mt-32 rounded-t-[80px]">
-          <ThemedText type="display" className="text-center text-5xl mb-8 tracking-tighter">READY TO{'\n'}DOMINATE?</ThemedText>
-          <ThemedText type="h2" variant="muted" className="text-center mb-12 max-w-[280px] leading-7">
-            Join 5,000+ teams who have leveled up their match day with Stewy.
-          </ThemedText>
-          <ThemedButton 
-            label="Create My Team" 
-            variant="primary" 
-            size="lg" 
-            className="w-full max-w-sm py-7 rounded-[36px] shadow-accent-lg" 
-            onPress={() => router.push('/sign-in')}
+        {isAdmin && (
+          <StatCardsSection
+            pendingUsers={pendingUsers}
+            pendingProfiles={pendingProfiles}
+            onReviewUsers={() => router.push("/(app)/(tabs)/volonteers")}
+            onVerifyChanges={() => router.push("/(app)/(tabs)/volonteers")}
+            t={t}
+            colors={colors}
           />
-        </View>
-      </ScrollView>
+        )}
+
+        {isAdmin && pendingUsers.length > 0 && (
+          <Section
+            title={t("admin.pendingActivations")}
+            count={pendingUsers.length}
+          >
+            {pendingUsers.slice(0, 5).map((user) => (
+              <ThemedCard key={user.id} className="p-4 mb-2">
+                <View className="flex-row justify-between items-center">
+                  <View className="flex-1 mr-4">
+                    <ThemedText type="bodySemiBold">
+                      {user.firstName} {user.lastName}
+                    </ThemedText>
+                    <ThemedText type="bodySmall" variant="muted">
+                      {user.email}
+                    </ThemedText>
+                  </View>
+                  <ThemedButton
+                    label={t("admin.activate")}
+                    variant="primary"
+                    size="sm"
+                    onPress={() => onActivateUser(user.id)}
+                  />
+                </View>
+              </ThemedCard>
+            ))}
+          </Section>
+        )}
+
+        {isHoofdSteward && (
+          <Section
+            title={t("dashboard.widget.pendingApprovals")}
+            count={pendingApprovals.length}
+          >
+            {pendingApprovals.slice(0, 5).map((p) => (
+              <ReviewCard
+                key={p.id}
+                initials={`${p.firstName[0]}${p.lastName[0]}`}
+                name={`${p.firstName} ${p.lastName}`}
+                timeAgo=""
+                subtitle={p.role}
+                actionLabel={t("dashboard.reviewCard.review")}
+                onAction={() => router.push(`/(app)/(tabs)/volonteers`)}
+              />
+            ))}
+          </Section>
+        )}
+
+        {isAdmin && pendingProfiles.length > 0 && (
+          <Section
+            title={t("admin.pendingProfiles")}
+            count={pendingProfiles.length}
+          >
+            {pendingProfiles.slice(0, 5).map((p) => (
+              <ThemedCard key={p.id} className="p-4 mb-2">
+                <View className="flex-row justify-between items-center">
+                  <View className="flex-1 mr-4">
+                    <ThemedText type="bodySemiBold">
+                      {p.firstName} {p.lastName}
+                    </ThemedText>
+                    <ThemedText type="bodySmall" variant="muted">
+                      {p.role}
+                    </ThemedText>
+                  </View>
+                  <View className="flex-row gap-2">
+                    <ThemedButton
+                      label={t("admin.approve")}
+                      variant="primary"
+                      size="sm"
+                      onPress={() => onApproveProfile(p.id)}
+                    />
+                    <ThemedButton
+                      label={t("admin.reject")}
+                      variant="outline"
+                      size="sm"
+                      onPress={() => onRejectProfile(p.id)}
+                    />
+                  </View>
+                </View>
+              </ThemedCard>
+            ))}
+          </Section>
+        )}
+
+        {(isHoofdSteward || isStewardOrDc) && (
+          <GamesSection
+            upcomingGames={isHoofdSteward ? clubGames : upcomingGames}
+            title={t("dashboard.widget.upcomingGames")}
+            t={t}
+            router={router}
+          />
+        )}
+
+        {(isHoofdSteward || isStewardOrDc) && myGames.length > 0 && (
+          <Section title={t("dashboard.widget.myGames")} count={myGames.length}>
+            {myGames.slice(0, 5).map((g) => (
+              <AssignmentCard
+                key={g.id}
+                role={g.game}
+                game={g.homeTeam?.clubName ?? ""}
+                date={new Date(g.appointment).toLocaleDateString()}
+                time={new Date(g.appointment).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+                actionLabel={t("dashboard.assignmentCard.viewDetails")}
+                onAction={() => router.push(`/game/${g.id}`)}
+              />
+            ))}
+          </Section>
+        )}
+
+        {(isHoofdSteward || isStewardOrDc) && invitations.length > 0 && (
+          <Section
+            title={t("dashboard.widget.invitations")}
+            count={invitations.length}
+          >
+            {invitations.slice(0, 5).map((inv) => (
+              <ThemedCard key={inv.volunteerId} className="p-4 mb-2">
+                <View className="flex-row justify-between items-center">
+                  <ThemedText type="bodySemiBold">
+                    {inv.volunteerName}
+                  </ThemedText>
+                  <ThemedBadge variant="info" label={inv.status} dot />
+                </View>
+              </ThemedCard>
+            ))}
+          </Section>
+        )}
+
+        {isAdmin && (
+          <GamesSection
+            upcomingGames={upcomingGames}
+            title={t("dashboard.widget.upcomingGames")}
+            t={t}
+            router={router}
+          />
+        )}
+      </ThemedView>
+    </ScrollView>
+  );
+}
+
+function MobileDashboard({
+  isAdmin,
+  isHoofdSteward,
+  isStewardOrDc,
+  user,
+  pendingUsers,
+  pendingProfiles,
+  activeVolunteers,
+  upcomingGames,
+  clubGames,
+  myGames,
+  invitations,
+  pendingApprovals,
+  hsPendingRequests,
+  onActivateUser,
+  onApproveProfile,
+  onRejectProfile,
+  colors,
+  t,
+  router,
+}: DashboardProps) {
+  return (
+    <ScrollView
+      className="flex-1 px-6 pt-4"
+      showsVerticalScrollIndicator={false}
+    >
+      <ThemedView className="gap-6 pb-8">
+        <WelcomeSection
+          name={`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}
+          isAdmin={isAdmin}
+          t={t}
+          colors={colors}
+        />
+
+        {isAdmin && (
+          <>
+            <BaseWidget
+              title={t("admin.pendingActivations")}
+              count={pendingUsers.length}
+              emptyState={t("admin.noPendingActivations")}
+            >
+              {pendingUsers.slice(0, 5).map((u) => (
+                <ThemedCard key={u.id} className="p-4 mb-2">
+                  <View className="flex-row justify-between items-center">
+                    <View className="flex-1 mr-4">
+                      <ThemedText type="bodySemiBold">
+                        {u.firstName} {u.lastName}
+                      </ThemedText>
+                      <ThemedText type="bodySmall" variant="muted">
+                        {u.email}
+                      </ThemedText>
+                    </View>
+                    <ThemedButton
+                      label={t("admin.activate")}
+                      variant="primary"
+                      size="sm"
+                      onPress={() => onActivateUser(u.id)}
+                    />
+                  </View>
+                </ThemedCard>
+              ))}
+            </BaseWidget>
+
+            <BaseWidget
+              title={t("admin.pendingProfiles")}
+              count={pendingProfiles.length}
+              emptyState={t("admin.noPendingProfiles")}
+            >
+              {pendingProfiles.slice(0, 5).map((p) => (
+                <ThemedCard key={p.id} className="p-4 mb-2">
+                  <ThemedText type="bodySemiBold">
+                    {p.firstName} {p.lastName}
+                  </ThemedText>
+                  <ThemedText type="bodySmall" variant="muted">
+                    {p.role}
+                  </ThemedText>
+                  <View className="flex-row gap-2 mt-3">
+                    <ThemedButton
+                      label={t("admin.approve")}
+                      variant="primary"
+                      size="sm"
+                      onPress={() => onApproveProfile(p.id)}
+                    />
+                    <ThemedButton
+                      label={t("admin.reject")}
+                      variant="outline"
+                      size="sm"
+                      onPress={() => onRejectProfile(p.id)}
+                    />
+                  </View>
+                </ThemedCard>
+              ))}
+            </BaseWidget>
+
+            <BaseWidget
+              title={t("admin.activeVolunteers")}
+              count={activeVolunteers.length}
+              emptyState={t("admin.noActiveVolunteers")}
+            >
+              {activeVolunteers.slice(0, 10).map((p) => (
+                <ThemedCard key={p.id} className="p-4 mb-2">
+                  <View className="flex-row items-center justify-between">
+                    <View>
+                      <ThemedText type="bodySemiBold">
+                        {p.firstName} {p.lastName}
+                      </ThemedText>
+                      <ThemedText type="bodySmall" variant="muted">
+                        {p.role}
+                      </ThemedText>
+                      {p.club && (
+                        <ThemedText type="bodySmall" variant="muted">
+                          {p.club.clubName}
+                        </ThemedText>
+                      )}
+                    </View>
+                    <ThemedBadge
+                      variant="success"
+                      label={t("admin.approved")}
+                      dot
+                    />
+                  </View>
+                </ThemedCard>
+              ))}
+            </BaseWidget>
+          </>
+        )}
+
+        {isHoofdSteward && (
+          <>
+            <GamesSection
+              upcomingGames={clubGames}
+              title={t("dashboard.widget.upcomingGames")}
+              t={t}
+              router={router}
+            />
+
+            <BaseWidget
+              title={t("dashboard.widget.myGames")}
+              count={myGames.length}
+              emptyState={t("dashboard.empty.myGames")}
+            >
+              {myGames.slice(0, 5).map((g) => (
+                <AssignmentCard
+                  key={g.id}
+                  role={g.game}
+                  game={g.homeTeam?.clubName ?? ""}
+                  date={new Date(g.appointment).toLocaleDateString()}
+                  time={new Date(g.appointment).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                  actionLabel={t("dashboard.assignmentCard.viewDetails")}
+                  onAction={() => router.push(`/game/${g.id}`)}
+                />
+              ))}
+            </BaseWidget>
+
+            <BaseWidget
+              title={t("dashboard.widget.pendingApprovals")}
+              count={pendingApprovals.length}
+              emptyState={t("dashboard.empty.pendingProfiles")}
+            >
+              {pendingApprovals.slice(0, 5).map((p) => (
+                <ReviewCard
+                  key={p.id}
+                  initials={`${p.firstName[0]}${p.lastName[0]}`}
+                  name={`${p.firstName} ${p.lastName}`}
+                  timeAgo=""
+                  subtitle={p.role}
+                  actionLabel={t("dashboard.reviewCard.review")}
+                  onAction={() => router.push("/(app)/(tabs)/games")}
+                />
+              ))}
+            </BaseWidget>
+          </>
+        )}
+
+        {isStewardOrDc && (
+          <>
+            <GamesSection
+              upcomingGames={upcomingGames}
+              title={t("dashboard.widget.upcomingGames")}
+              t={t}
+              router={router}
+            />
+
+            <BaseWidget
+              title={t("dashboard.widget.myGames")}
+              count={myGames.length}
+              emptyState={t("dashboard.empty.myGames")}
+            >
+              {myGames.slice(0, 5).map((g) => (
+                <AssignmentCard
+                  key={g.id}
+                  role={g.game}
+                  game={g.homeTeam?.clubName ?? ""}
+                  date={new Date(g.appointment).toLocaleDateString()}
+                  time={new Date(g.appointment).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                  actionLabel={t("dashboard.assignmentCard.viewDetails")}
+                  onAction={() => router.push(`/game/${g.id}`)}
+                />
+              ))}
+            </BaseWidget>
+
+            <BaseWidget
+              title={t("dashboard.widget.invitations")}
+              count={invitations.length}
+              emptyState={t("dashboard.empty.invitations")}
+            >
+              {invitations.slice(0, 5).map((inv) => (
+                <ThemedCard key={inv.volunteerId} className="p-4 mb-2">
+                  <View className="flex-row justify-between items-center">
+                    <ThemedText type="bodySemiBold">
+                      {inv.volunteerName}
+                    </ThemedText>
+                    <ThemedBadge variant="info" label={inv.status} dot />
+                  </View>
+                </ThemedCard>
+              ))}
+            </BaseWidget>
+          </>
+        )}
+
+        {!isAdmin && !isHoofdSteward && !isStewardOrDc && (
+          <ThemedCard className="p-6">
+            <ThemedText type="body" variant="muted" className="text-center">
+              {t("dashboard.title")}
+            </ThemedText>
+          </ThemedCard>
+        )}
+      </ThemedView>
+    </ScrollView>
+  );
+}
+
+function WelcomeSection({
+  name,
+  isAdmin,
+  t,
+  colors,
+}: {
+  name: string;
+  isAdmin: boolean;
+  t: (key: string) => string;
+  colors: Record<string, string>;
+}) {
+  return (
+    <ThemedCard>
+      <ThemedText type="h1" className="mb-2">
+        {t("dashboard.welcome")}, {name || t("welcome")}
+      </ThemedText>
+      <View className="flex-row items-center gap-2">
+        <View
+          className="w-2 h-2 rounded-full"
+          style={{ backgroundColor: colors.accent }}
+        />
+        <ThemedText type="bodySemiBold" style={{ color: colors.accent }}>
+          {isAdmin ? t("dashboard.headAdmin") : t("dashboard.clubAdmin")}
+        </ThemedText>
+      </View>
+    </ThemedCard>
+  );
+}
+
+function StatCardsSection({
+  pendingUsers,
+  pendingProfiles,
+  onReviewUsers,
+  onVerifyChanges,
+  t,
+  colors,
+}: {
+  pendingUsers: UserDto[];
+  pendingProfiles: ProfileEntry[];
+  onReviewUsers: () => void;
+  onVerifyChanges: () => void;
+  t: (key: string) => string;
+  colors: Record<string, string>;
+}) {
+  return (
+    <View className="flex-row gap-6">
+      <StatCard
+        icon="👤"
+        count={pendingUsers.length}
+        title={t("dashboard.stat.pendingUsers.title")}
+        description={t("dashboard.stat.pendingUsers.description")}
+        actionLabel={t("dashboard.stat.pendingUsers.action")}
+        onAction={onReviewUsers}
+      />
+      <StatCard
+        icon="📋"
+        count={pendingProfiles.length}
+        title={t("dashboard.stat.pendingProfiles.title")}
+        description={t("dashboard.stat.pendingProfiles.description")}
+        actionLabel={t("dashboard.stat.pendingProfiles.action")}
+        onAction={onVerifyChanges}
+      />
+    </View>
+  );
+}
+
+function Section({
+  title,
+  count,
+  children,
+}: {
+  title: string;
+  count: number;
+  children: React.ReactNode;
+}) {
+  return (
+    <ThemedView>
+      <View className="flex-row items-center gap-2 mb-4">
+        <ThemedText type="h2">{title}</ThemedText>
+        {count > 0 && (
+          <View className="bg-accent-500 rounded-full px-2.5 py-0.5 min-w-[24px]">
+            <ThemedText
+              type="caption"
+              style={{ color: "#FFFFFF", textAlign: "center" }}
+            >
+              {count}
+            </ThemedText>
+          </View>
+        )}
+      </View>
+      {children}
     </ThemedView>
   );
 }
 
-const styles = StyleSheet.create({
-  heroImage: {
-    width: '100%',
-    height: '100%',
-  },
-});
+function GamesSection({
+  upcomingGames,
+  title,
+  t,
+  router,
+}: {
+  upcomingGames: GameDto[];
+  title: string;
+  t: (key: string) => string;
+  router: ReturnType<typeof useRouter>;
+}) {
+  if (upcomingGames.length === 0) return null;
+
+  return (
+    <Section title={title} count={upcomingGames.length}>
+      {upcomingGames.slice(0, 5).map((g) => (
+        <View key={g.id} className="mb-2">
+          <GameCard
+            homeTeam={g.homeTeam?.clubName ?? "Home"}
+            awayTeam={g.awayTeam?.clubName ?? "Away"}
+            date={new Date(g.appointment).toLocaleDateString()}
+            time={new Date(g.appointment).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+            venue={g.location ?? ""}
+            status={
+              g.status === "CLOSED"
+                ? "confirmed"
+                : g.status === "OPEN"
+                  ? "pending"
+                  : "staffNeeded"
+            }
+            onPress={() => router.push(`/game/${g.id}`)}
+          />
+        </View>
+      ))}
+    </Section>
+  );
+}

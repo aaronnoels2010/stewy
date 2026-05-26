@@ -1,17 +1,17 @@
-import { useEffect, useState } from 'react';
-import { View, ScrollView, ActivityIndicator, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { ThemedButton } from '@/components/ThemedButton';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { ThemedCard } from '@/components/ThemedCard';
-import { ThemedBadge } from '@/components/ThemedBadge';
-import { useTranslation } from 'react-i18next';
-import { useSession } from '@/contexts/auth.context';
-import { adminService } from '@/services/admin.service';
-import type { UserDto } from '@/types/api';
-import { useDesignTokens } from '@/hooks/useDesignTokens';
-import { api } from '@/services/api';
+import { useEffect, useState } from "react";
+import { View, ScrollView, ActivityIndicator, Alert } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ThemedButton } from "@/components/ThemedButton";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedCard } from "@/components/ThemedCard";
+import { ThemedBadge } from "@/components/ThemedBadge";
+import { useTranslation } from "react-i18next";
+import { useSession } from "@/contexts/auth.context";
+import { adminService } from "@/services/admin.service";
+import type { UserDto } from "@/types/api";
+import { useDesignTokens } from "@/hooks/useDesignTokens";
+import { api } from "@/services/api";
 
 interface ProfileEntry {
   id: string;
@@ -20,8 +20,8 @@ interface ProfileEntry {
   role: string;
   kbvbId: string;
   club: { id: string; clubName: string } | null;
-  profileStatus: 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED';
-  clubStatus?: 'PENDING' | 'APPROVED' | 'REJECTED' | null;
+  profileStatus: "PENDING_APPROVAL" | "APPROVED" | "REJECTED";
+  clubStatus?: "PENDING" | "APPROVED" | "REJECTED" | null;
 }
 
 export default function VolonteersOverviewScreen() {
@@ -40,7 +40,9 @@ export default function VolonteersOverviewScreen() {
       if (isAdmin) {
         const [users, profiles] = await Promise.all([
           adminService.getPendingUsers(),
-          api.get<{ pending: ProfileEntry[]; approved: ProfileEntry[] }>('/volunteers/profiles'),
+          api.get<{ pending: ProfileEntry[]; approved: ProfileEntry[] }>(
+            "/volunteers/profiles",
+          ),
         ]);
         setPendingUsers(users);
         setPendingProfiles(profiles.pending);
@@ -79,15 +81,17 @@ export default function VolonteersOverviewScreen() {
   };
 
   const handleReject = (volunteerId: string) => {
-    Alert.alert(t('admin.rejectTitle'), t('admin.rejectMessage'), [
-      { text: t('admin.cancel'), style: 'cancel' },
+    Alert.alert(t("admin.rejectTitle"), t("admin.rejectMessage"), [
+      { text: t("admin.cancel"), style: "cancel" },
       {
-        text: t('admin.reject'),
-        style: 'destructive',
+        text: t("admin.reject"),
+        style: "destructive",
         onPress: async () => {
           try {
             await adminService.rejectProfile(volunteerId);
-            setPendingProfiles((prev) => prev.filter((p) => p.id !== volunteerId));
+            setPendingProfiles((prev) =>
+              prev.filter((p) => p.id !== volunteerId),
+            );
           } catch {
             // Handle error
           }
@@ -98,9 +102,11 @@ export default function VolonteersOverviewScreen() {
 
   if (!isAdmin) {
     return (
-      <SafeAreaView className="flex-1" edges={['top']}>
+      <SafeAreaView className="flex-1" edges={["top"]}>
         <ThemedView className="flex-1 items-center justify-center p-8">
-          <ThemedText type="h1" className="mb-4">{t('volonteers')}</ThemedText>
+          <ThemedText type="h1" className="mb-4">
+            {t("volonteers")}
+          </ThemedText>
           <ThemedText type="body" variant="muted" className="text-center">
             Volunteers section coming soon
           </ThemedText>
@@ -110,9 +116,11 @@ export default function VolonteersOverviewScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1" edges={['top']}>
-      <ScrollView className="flex-1 px-6 pt-4">
-        <ThemedText type="h1" className="mb-6">{t('volonteers')}</ThemedText>
+    <SafeAreaView className="flex-1" edges={["top"]}>
+      <ScrollView className="flex-1 pt-4 px-6">
+        <ThemedText type="h1" className="mb-6">
+          {t("volonteers")}
+        </ThemedText>
 
         {isLoading ? (
           <View className="items-center py-10">
@@ -121,11 +129,13 @@ export default function VolonteersOverviewScreen() {
         ) : (
           <>
             {/* Pending Activations */}
-            <ThemedText type="h3" className="mb-4">{t('admin.pendingActivations')}</ThemedText>
+            <ThemedText type="h3" className="mb-4">
+              {t("admin.pendingActivations")}
+            </ThemedText>
             {pendingUsers.length === 0 ? (
               <ThemedCard className="mb-4 p-6">
                 <ThemedText type="body" variant="muted" className="text-center">
-                  {t('admin.noPendingActivations')}
+                  {t("admin.noPendingActivations")}
                 </ThemedText>
               </ThemedCard>
             ) : (
@@ -136,10 +146,14 @@ export default function VolonteersOverviewScreen() {
                       <ThemedText type="bodySemiBold">
                         {user.firstName} {user.lastName}
                       </ThemedText>
-                      <ThemedText type="bodySmall" variant="muted">{user.email}</ThemedText>
+                      <ThemedText type="bodySmall" variant="muted">
+                        {user.email}
+                      </ThemedText>
                     </View>
                     <ThemedButton
-                      label={activatingId === user.id ? '...' : t('admin.activate')}
+                      label={
+                        activatingId === user.id ? "..." : t("admin.activate")
+                      }
                       variant="primary"
                       size="sm"
                       loading={activatingId === user.id}
@@ -151,11 +165,13 @@ export default function VolonteersOverviewScreen() {
             )}
 
             {/* Pending Profiles */}
-            <ThemedText type="h3" className="mb-4 mt-6">{t('admin.pendingProfiles')}</ThemedText>
+            <ThemedText type="h3" className="mb-4 mt-6">
+              {t("admin.pendingProfiles")}
+            </ThemedText>
             {pendingProfiles.length === 0 ? (
               <ThemedCard className="mb-4 p-6">
                 <ThemedText type="body" variant="muted" className="text-center">
-                  {t('admin.noPendingProfiles')}
+                  {t("admin.noPendingProfiles")}
                 </ThemedText>
               </ThemedCard>
             ) : (
@@ -164,20 +180,26 @@ export default function VolonteersOverviewScreen() {
                   <ThemedText type="bodySemiBold">
                     {profile.firstName} {profile.lastName}
                   </ThemedText>
-                  <ThemedText type="bodySmall" variant="muted">{profile.role}</ThemedText>
-                  <ThemedText type="bodySmall" variant="muted">KBVB: {profile.kbvbId}</ThemedText>
+                  <ThemedText type="bodySmall" variant="muted">
+                    {profile.role}
+                  </ThemedText>
+                  <ThemedText type="bodySmall" variant="muted">
+                    KBVB: {profile.kbvbId}
+                  </ThemedText>
                   {profile.club && (
-                    <ThemedText type="bodySmall" variant="muted">{profile.club.clubName}</ThemedText>
+                    <ThemedText type="bodySmall" variant="muted">
+                      {profile.club.clubName}
+                    </ThemedText>
                   )}
                   <View className="flex-row gap-2 mt-3">
                     <ThemedButton
-                      label={t('admin.approve')}
+                      label={t("admin.approve")}
                       variant="primary"
                       size="sm"
                       onPress={() => handleApprove(profile.id)}
                     />
                     <ThemedButton
-                      label={t('admin.reject')}
+                      label={t("admin.reject")}
                       variant="outline"
                       size="sm"
                       onPress={() => handleReject(profile.id)}
@@ -188,11 +210,13 @@ export default function VolonteersOverviewScreen() {
             )}
 
             {/* Active Volunteers */}
-            <ThemedText type="h3" className="mb-4 mt-6">{t('admin.activeVolunteers')}</ThemedText>
+            <ThemedText type="h3" className="mb-4 mt-6">
+              {t("admin.activeVolunteers")}
+            </ThemedText>
             {activeVolunteers.length === 0 ? (
               <ThemedCard className="mb-6 p-6">
                 <ThemedText type="body" variant="muted" className="text-center">
-                  {t('admin.noActiveVolunteers')}
+                  {t("admin.noActiveVolunteers")}
                 </ThemedText>
               </ThemedCard>
             ) : (
@@ -203,12 +227,20 @@ export default function VolonteersOverviewScreen() {
                       <ThemedText type="bodySemiBold">
                         {profile.firstName} {profile.lastName}
                       </ThemedText>
-                      <ThemedText type="bodySmall" variant="muted">{profile.role}</ThemedText>
+                      <ThemedText type="bodySmall" variant="muted">
+                        {profile.role}
+                      </ThemedText>
                       {profile.club && (
-                        <ThemedText type="bodySmall" variant="muted">{profile.club.clubName}</ThemedText>
+                        <ThemedText type="bodySmall" variant="muted">
+                          {profile.club.clubName}
+                        </ThemedText>
                       )}
                     </View>
-                    <ThemedBadge variant="success" label={t('admin.approved')} dot />
+                    <ThemedBadge
+                      variant="success"
+                      label={t("admin.approved")}
+                      dot
+                    />
                   </View>
                 </ThemedCard>
               ))

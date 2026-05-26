@@ -205,4 +205,12 @@ public class VolunteerServiceImpl implements VolunteerService {
         }
         return volunteerMapper.mapVolunteerToProfileResponse(volunteer);
     }
+
+    @Override
+    public List<VolunteerProfileResponseDto> getPendingProfilesByClub(UUID clubId) {
+        return volunteerRepository.findByClubIdAndProfileStatus(clubId, ProfileStatus.PENDING_APPROVAL.name())
+                .stream()
+                .map(volunteerMapper::mapVolunteerToProfileResponse)
+                .toList();
+    }
 }

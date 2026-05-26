@@ -1,8 +1,9 @@
 import { useContext, createContext, useState, useEffect, useCallback, type PropsWithChildren } from 'react';
 import { authService } from '@/services/auth.service';
+import { volunteerService } from '@/services/volunteer.service';
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
-import type { UserDto } from '@/types/api';
+import type { UserDto, VolunteerProfileResponse } from '@/types/api';
 
 const TOKEN_KEY = 'auth-token';
 
@@ -15,7 +16,16 @@ interface AuthContextValue {
   isAdmin: boolean;
   isLoading: boolean;
   isAuthenticated: boolean;
+  profile: VolunteerProfileResponse | null;
+  profileStatus: string | null;
+  volunteerRole: string | null;
+  isProfileApproved: boolean;
+  isHoofdSteward: boolean;
+  isProfileLoading: boolean;
+  refreshProfile: () => Promise<void>;
 }
+
+const noop = async () => {};
 
 const AuthContext = createContext<AuthContextValue>({
   signIn: async () => {},
@@ -26,6 +36,13 @@ const AuthContext = createContext<AuthContextValue>({
   isAdmin: false,
   isLoading: false,
   isAuthenticated: false,
+  profile: null,
+  profileStatus: null,
+  volunteerRole: null,
+  isProfileApproved: false,
+  isHoofdSteward: false,
+  isProfileLoading: false,
+  refreshProfile: noop,
 });
 
 export function useSession() {
@@ -42,6 +59,8 @@ export function SessionProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<UserDto | null>(null);
   const [token, setTokenState] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [profile, setProfile] = useState<VolunteerProfileResponse | null>(null);
+  const [isProfileLoading, setIsProfileLoading] = useState(false);
 
   useEffect(() => {
     if (Platform.OS === 'web') {
@@ -71,9 +90,34 @@ export function SessionProvider({ children }: PropsWithChildren) {
       });
   }, [token]);
 
+  const fetchProfile = useCallback(async () => {
+    if (!token || !user) {
+      setProfile(null);
+      setIsProfileLoading(false);
+      return;
+    }
+    setIsProfileLoading(true);
+    try {
+      const p = await volunteerService.getMyProfile();
+      setProfile(p);
+    } catch {
+      setProfile(null);
+    } finally {
+      setIsProfileLoading(false);
+    }
+  }, [token, user]);
+
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
+
   const session = token;
   const isAuthenticated = !!token;
   const isAdmin = user?.role === 'ADMIN';
+  const profileStatus = profile?.profileStatus ?? null;
+  const volunteerRole = profile?.role ?? null;
+  const isProfileApproved = profileStatus === 'APPROVED';
+  const isHoofdSteward = volunteerRole === 'HOOFD_STEWARD';
 
   const signIn = useCallback(async (email: string, password: string) => {
     const response = await authService.login(email, password);
@@ -113,6 +157,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
   const signOut = useCallback(() => {
     setTokenState(null);
     setUser(null);
+    setProfile(null);
     if (Platform.OS === 'web') {
       localStorage.removeItem(TOKEN_KEY);
     } else {
@@ -131,6 +176,13 @@ export function SessionProvider({ children }: PropsWithChildren) {
         isAdmin,
         isLoading,
         isAuthenticated,
+        profile,
+        profileStatus,
+        volunteerRole,
+        isProfileApproved,
+        isHoofdSteward,
+        isProfileLoading,
+        refreshProfile: fetchProfile,
       }}>
       {children}
     </AuthContext.Provider>

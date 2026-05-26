@@ -48,6 +48,14 @@ public class VolunteerGameRepositoryImpl extends GenericRepositoryImpl<Volunteer
     }
 
     @Override
+    public List<VolunteerGame> findByGameIds(List<UUID> gameIds) {
+        if (gameIds == null || gameIds.isEmpty()) return List.of();
+        return getEntityManager().createQuery("select vg from VolunteerGame vg where vg.gameId in :gameIds", VolunteerGame.class)
+                .setParameter("gameIds", gameIds)
+                .getResultList();
+    }
+
+    @Override
     @Transactional
     public void update(VolunteerGame volunteerGame) {
         getEntityManager().merge(volunteerGame);

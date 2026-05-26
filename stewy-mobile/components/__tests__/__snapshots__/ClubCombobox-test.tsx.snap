@@ -1,0 +1,208 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ClubCombobox renders empty list 1`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "backgroundColor": "#F9FAFB",
+      "opacity": 1,
+    }
+  }
+>
+  <Text
+    className="text-[#111C2D] font-body text-base leading-relaxed  opacity-50"
+  >
+    Select away team...
+  </Text>
+  <ViewManagerAdapter_SymbolModule
+    animated={false}
+    colors={[]}
+    name="chevron.down"
+    resizeMode="scaleAspectFit"
+    style={
+      [
+        {
+          "height": 24,
+          "width": 24,
+        },
+        [
+          {
+            "height": 16,
+            "width": 16,
+          },
+          undefined,
+        ],
+      ]
+    }
+    tint={4282337853}
+    tintColor="#3F4A3D"
+    type="monochrome"
+    weight="regular"
+  />
+</View>
+`;
+
+exports[`ClubCombobox renders with selected club 1`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "backgroundColor": "#F9FAFB",
+      "opacity": 1,
+    }
+  }
+>
+  <Text
+    className="text-[#111C2D] font-body text-base leading-relaxed"
+  >
+    Real Madrid
+  </Text>
+  <ViewManagerAdapter_SymbolModule
+    animated={false}
+    colors={[]}
+    name="chevron.down"
+    resizeMode="scaleAspectFit"
+    style={
+      [
+        {
+          "height": 24,
+          "width": 24,
+        },
+        [
+          {
+            "height": 16,
+            "width": 16,
+          },
+          undefined,
+        ],
+      ]
+    }
+    tint={4282337853}
+    tintColor="#3F4A3D"
+    type="monochrome"
+    weight="regular"
+  />
+</View>
+`;
+
+exports[`ClubCombobox renders without selection 1`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "backgroundColor": "#F9FAFB",
+      "opacity": 1,
+    }
+  }
+>
+  <Text
+    className="text-[#111C2D] font-body text-base leading-relaxed  opacity-50"
+  >
+    Select away team...
+  </Text>
+  <ViewManagerAdapter_SymbolModule
+    animated={false}
+    colors={[]}
+    name="chevron.down"
+    resizeMode="scaleAspectFit"
+    style={
+      [
+        {
+          "height": 24,
+          "width": 24,
+        },
+        [
+          {
+            "height": 16,
+            "width": 16,
+          },
+          undefined,
+        ],
+      ]
+    }
+    tint={4282337853}
+    tintColor="#3F4A3D"
+    type="monochrome"
+    weight="regular"
+  />
+</View>
+`;

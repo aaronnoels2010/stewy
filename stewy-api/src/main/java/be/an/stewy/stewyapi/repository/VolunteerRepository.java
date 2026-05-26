@@ -28,4 +28,5 @@ public interface VolunteerRepository {
     List<Volunteer> findByProfileStatus(String profileStatus);
     List<Volunteer> findByClubIdAndClubStatus(UUID clubId, String clubStatus);
     List<Volunteer> findByClubId(UUID clubId);
+    List<Volunteer> findByClubIdAndProfileStatus(UUID clubId, String profileStatus);
 }

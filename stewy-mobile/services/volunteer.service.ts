@@ -14,6 +14,9 @@ export const volunteerService = {
 
   getMyProfile: () =>
     api.get<VolunteerProfileResponse>('/volunteers/profile/me'),
+
+  getPendingProfilesByClub: () =>
+    api.get<VolunteerProfileResponse[]>('/hoofdsteward/club/pending-profiles'),
 };
 
 export type { VolunteerProfileResponse };

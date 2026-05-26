@@ -18,4 +18,7 @@ export const gameService = {
 
   getMyClubGames: () =>
     api.get<{ items: GameDto[]; total: number }>('/games/my-club-games'),
+
+  getUpcomingGames: () =>
+    api.get<GameDto[]>('/volunteers/my-games/upcoming'),
 };

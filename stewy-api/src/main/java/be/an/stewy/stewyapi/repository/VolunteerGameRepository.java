@@ -10,5 +10,6 @@ public interface VolunteerGameRepository {
     void assignVolunteerToGame(VolunteerGame volunteerGame);
     VolunteerGame findByVolunteerIdAndGameId(UUID volunteerId, UUID gameId);
     List<VolunteerGame> findByGameId(UUID gameId);
+    List<VolunteerGame> findByGameIds(List<UUID> gameIds);
     void update(VolunteerGame volunteerGame);
 }

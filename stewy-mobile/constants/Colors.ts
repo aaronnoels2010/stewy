@@ -1,113 +1,99 @@
-/**
- * Stewy Design System — Color Tokens
- *
- * Premium Slate/Zinc palette with a vibrant Emerald Green accent.
- * High-end feel with deep blacks in dark mode and clean slates in light mode.
- *
- * Accent: #10B981 (Emerald 500)
- */
+const pitch = "#006B22";
+const pitchDark = "#005318";
+const pitchDeep = "#003D12";
+const pitchLight = "#178632";
+const pitchBright = "#2D963F";
+const pitchFixed = "#91FA95";
+const pitchFixedDim = "#75DC7C";
 
-// ─── Accent ───────────────────────────────────────────────────────────────────
-const accent = '#10B981';      // Emerald 500
-const accentDark = '#059669';  // Emerald 600
-const accentDeep = '#047857';  // Emerald 700
-const accentLight = '#34D399'; // Emerald 400
-
-// ─── Palette ──────────────────────────────────────────────────────────────────
 export const Colors = {
   light: {
-    // Backgrounds
-    background: '#F8FAFC',       // Slate 50
-    surface: '#FFFFFF',
-    surfaceAlt: '#F1F5F9',       // Slate 100
-    surfaceHover: '#E2E8F0',     // Slate 200
+    background: "#F2F5F7",
+    surface: "#FFFFFF",
+    surfaceAlt: "#E7EEFF",
+    surfaceHover: "#D8E3FB",
 
-    // Borders
-    border: '#E2E8F0',           // Slate 200
-    borderStrong: '#CBD5E1',     // Slate 300
+    border: "#BECAB9",
+    borderStrong: "#6F7A6C",
 
-    // Text
-    text: '#0F172A',             // Slate 900
-    textMuted: '#64748B',        // Slate 500
-    textSubtle: '#94A3B8',       // Slate 400
-    textInverse: '#FFFFFF',
+    text: "#111C2D",
+    textMuted: "#3F4A3D",
+    textSubtle: "#6F7A6C",
+    textInverse: "#FFFFFF",
+    textWhite: "#FFFFFF",
 
-    // Accent
-    tint: accent,
-    accent,
-    accentDark,
-    accentDeep,
-    accentLight,
-    accentSubtle: '#ECFDF5',     // Emerald 50
-    accentText: accentDark,
+    tint: pitch,
+    accent: pitch,
+    accentDark: pitchDark,
+    accentDeep: pitchDeep,
+    accentLight: pitchLight,
+    accentBright: pitchBright,
+    accentFixed: pitchFixed,
+    accentFixedDim: pitchFixedDim,
+    accentSubtle: "#E7F5E8",
+    accentText: pitchDark,
 
-    // Tabs
-    tabIconDefault: '#94A3B8',
-    tabIconSelected: accent,
+    tabIconDefault: "#6F7A6C",
+    tabIconSelected: pitch,
 
-    // Status
-    success: '#10B981',
-    successSubtle: '#ECFDF5',
-    successText: '#047857',
-    warning: '#F59E0B',
-    warningSubtle: '#FFFBEB',
-    warningText: '#B45309',
-    danger: '#EF4444',
-    dangerSubtle: '#FEF2F2',
-    dangerText: '#B91C1C',
-    info: '#3B82F6',
-    infoSubtle: '#EFF6FF',
-    infoText: '#1D4ED8',
+    success: "#006B22",
+    successSubtle: "#E7F5E8",
+    successText: "#005318",
+    warning: "#8A6D00",
+    warningSubtle: "#FFF8E1",
+    warningText: "#6B5200",
+    danger: "#BA1A1A",
+    dangerSubtle: "#FFDAD6",
+    dangerText: "#93000A",
+    info: "#175B8A",
+    infoSubtle: "#E1F0FF",
+    infoText: "#0D4368",
 
-    // Icon
-    icon: '#64748B',
+    icon: "#3F4A3D",
   },
 
   dark: {
-    // Backgrounds
-    background: '#09090B',       // Zinc 950 (True deep black)
-    surface: '#18181B',          // Zinc 900
-    surfaceAlt: '#27272A',       // Zinc 800
-    surfaceHover: '#3F3F46',     // Zinc 700
+    background: "#0B121D",
+    surface: "#111C2D",
+    surfaceAlt: "#1E293B",
+    surfaceHover: "#273549",
 
-    // Borders
-    border: '#27272A',           // Zinc 800
-    borderStrong: '#3F3F46',     // Zinc 700
+    border: "#3F4A3D",
+    borderStrong: "#8E918F",
 
-    // Text
-    text: '#FAFAFA',             // Zinc 50
-    textMuted: '#A1A1AA',        // Zinc 400
-    textSubtle: '#71717A',       // Zinc 500
-    textInverse: '#09090B',
+    text: "#ECF1FF",
+    textMuted: "#D8E3FB",
+    textSubtle: "#6F7A6C",
+    textInverse: "#0B121D",
+    textWhite: "#FFFFFF",
 
-    // Accent
-    tint: accent,
-    accent,
-    accentDark,
-    accentDeep,
-    accentLight,
-    accentSubtle: '#064E3B',     // Emerald 900
-    accentText: accentLight,
+    tint: pitchBright,
+    accent: pitchBright,
+    accentDark: "#238030",
+    accentDeep: "#1A6B28",
+    accentLight: "#3DAB4F",
+    accentBright: pitchBright,
+    accentFixed: pitchFixed,
+    accentFixedDim: pitchFixedDim,
+    accentSubtle: "#1E293B",
+    accentText: pitchFixed,
 
-    // Tabs
-    tabIconDefault: '#71717A',
-    tabIconSelected: accent,
+    tabIconDefault: "#D8E3FB",
+    tabIconSelected: pitchBright,
 
-    // Status
-    success: '#10B981',
-    successSubtle: '#064E3B',
-    successText: '#34D399',
-    warning: '#F59E0B',
-    warningSubtle: '#451A03',
-    warningText: '#FBBF24',
-    danger: '#EF4444',
-    dangerSubtle: '#450A0A',
-    dangerText: '#FCA5A5',
-    info: '#3B82F6',
-    infoSubtle: '#172554',
-    infoText: '#93C5FD',
+    success: "#75DC7C",
+    successSubtle: "#1E293B",
+    successText: "#91FA95",
+    warning: "#F59E0B",
+    warningSubtle: "#3A2E00",
+    warningText: "#FFD84D",
+    danger: "#FFB4AB",
+    dangerSubtle: "#690005",
+    dangerText: "#FFB4AB",
+    info: "#81D4FF",
+    infoSubtle: "#003256",
+    infoText: "#81D4FF",
 
-    // Icon
-    icon: '#A1A1AA',
+    icon: "#D8E3FB",
   },
 };

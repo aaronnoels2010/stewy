@@ -114,4 +114,13 @@ public class VolunteerRepositoryImpl implements VolunteerRepository {
                 .setParameter("status", Enum.valueOf(be.an.stewy.stewyapi.ProfileStatus.class, profileStatus))
                 .getResultList();
     }
+
+    @Override
+    public List<Volunteer> findByClubIdAndProfileStatus(UUID clubId, String profileStatus) {
+        return entityManager.createQuery(
+                "select v from Volunteer v where v.club.id = :clubId and v.profileStatus = :status", Volunteer.class)
+                .setParameter("clubId", clubId)
+                .setParameter("status", Enum.valueOf(be.an.stewy.stewyapi.ProfileStatus.class, profileStatus))
+                .getResultList();
+    }
 }

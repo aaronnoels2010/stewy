@@ -53,6 +53,22 @@ public class GameRepositoryImpl extends GenericRepositoryImpl<Game> implements G
     }
 
     @Override
+    public List<Game> findByHomeTeamId(UUID clubId) {
+        return super.getEntityManager().createQuery("select g from Game g where g.homeTeam.id = :clubId", Game.class)
+                .setParameter("clubId", clubId)
+                .getResultList();
+    }
+
+    @Override
+    public List<Game> findOpenGamesByClubId(UUID clubId) {
+        return super.getEntityManager().createQuery(
+                "select g from Game g where (g.homeTeam.id = :clubId or g.awayTeam.id = :clubId) and g.status = 'OPEN'",
+                Game.class)
+                .setParameter("clubId", clubId)
+                .getResultList();
+    }
+
+    @Override
     public List<Game> findAllGamesByStatus(List<String> statussen) {
         return super.findByWhereClause(Game.class, "status", statussen);
 

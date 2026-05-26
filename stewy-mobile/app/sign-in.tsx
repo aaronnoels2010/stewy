@@ -6,28 +6,51 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { ThemedText }   from "@/components/ThemedText";
-import { ThemedInput }  from "@/components/ThemedInput";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedInput } from "@/components/ThemedInput";
 import { ThemedButton } from "@/components/ThemedButton";
-import { IconSymbol }   from "@/components/ui/IconSymbol";
-import { ThemedView }   from "@/components/ThemedView";
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedTopAppBar } from "@/components/ThemedTopAppBar";
+import {
+  ThemedBottomNav,
+  type BottomNavItem,
+} from "@/components/ThemedBottomNav";
+import { ThemedFormCard } from "@/components/ThemedFormCard";
+import { IconSymbol } from "@/components/ui/IconSymbol";
 import { useDesignTokens } from "@/hooks/useDesignTokens";
 import { ApiError } from "@/services/api";
 import { useTranslation } from "react-i18next";
 import { signInSchema } from "@/lib/signInSchema";
 import { apiErrorMapper, mapZodErrors } from "@/lib/apiErrorMapper";
 
+const bottomNavItems: BottomNavItem[] = [
+  {
+    key: "sign-in",
+    label: "Sign In",
+    icon: "arrow.right.to.line",
+    href: "/sign-in",
+  },
+  {
+    key: "register",
+    label: "Register",
+    icon: "person.badge.plus",
+    href: "/register",
+  },
+];
+
 export default function SignIn() {
   const { signIn } = useSession();
   const router = useRouter();
   const { t } = useTranslation();
-  const [email,    setEmail]    = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading,  setLoading]  = useState(false);
+  const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const [error,    setError]    = useState("");
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const { isDark, colors } = useDesignTokens();
 
   const handleSignIn = async () => {
@@ -45,6 +68,7 @@ export default function SignIn() {
       await signIn(email, password);
       router.replace("/(app)/(tabs)");
     } catch (err) {
+      console.error(err);
       if (err instanceof ApiError) {
         if (err.errors) {
           setFieldErrors(apiErrorMapper({ errors: err.errors }));
@@ -62,90 +86,143 @@ export default function SignIn() {
   return (
     <ThemedView className="flex-1">
       <StatusBar style={isDark ? "light" : "dark"} />
-      
+
+      {/* Pitch gradient blobs */}
+      <View
+        className="absolute top-[-80] right-[-80] w-[300] h-[300] rounded-full"
+        style={{
+          backgroundColor: colors.accent,
+          opacity: isDark ? 0.08 : 0.05,
+        }}
+      />
+      <View
+        className="absolute bottom-[-120] left-[-120] w-[400] h-[400] rounded-full"
+        style={{
+          backgroundColor: colors.accent,
+          opacity: isDark ? 0.04 : 0.03,
+        }}
+      />
+
+      <ThemedTopAppBar title="STEWY" iconName="soccerball" />
+
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
       >
-        {/* Decorative elements for premium feel */}
-        <View 
-          className="absolute top-[-50] right-[-50] w-[300] h-[300] rounded-full opacity-20" 
-          style={{ backgroundColor: colors.accent }}
-        />
-        <View 
-          className="absolute bottom-[-100] left-[-100] w-[400] h-[400] rounded-full opacity-10" 
-          style={{ backgroundColor: colors.accentDark }}
-        />
+        <ScrollView
+          contentContainerClassName="flex-grow justify-center px-4"
+          keyboardShouldPersistTaps="handled"
+        >
+          <View className="w-full max-w-md mx-auto">
+            {/* Form */}
+            <ThemedFormCard>
+              <View className="gap-6">
+                <ThemedInput
+                  label={t("signIn.emailLabel")}
+                  placeholder="COACH@THEPITCH.APP"
+                  value={email}
+                  onChangeText={(v) => {
+                    setEmail(v);
+                    setFieldErrors({});
+                    setError("");
+                  }}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  uppercaseLabel
+                  labelSize="sm"
+                  leadingIcon={
+                    <IconSymbol
+                      name="envelope"
+                      size={16}
+                      color={colors.textMuted}
+                    />
+                  }
+                  error={fieldErrors.email}
+                />
 
-        <View className="flex-1 justify-center px-8 z-10">
-          {/* Wordmark */}
-          <View className="mb-12">
-            <View className="flex-row items-center gap-4 mb-4">
-              <View 
-                className="w-12 h-12 rounded-2xl items-center justify-center shadow-accent-lg"
-                style={{ backgroundColor: colors.accent }}
-              >
-                <IconSymbol name="soccerball" size={28} color="#fff" />
+                <ThemedInput
+                  label={t("signIn.passwordLabel")}
+                  placeholder="••••••••"
+                  value={password}
+                  onChangeText={(v) => {
+                    setPassword(v);
+                    setFieldErrors({});
+                    setError("");
+                  }}
+                  secureTextEntry={!showPassword}
+                  uppercaseLabel
+                  labelSize="sm"
+                  leadingIcon={
+                    <IconSymbol
+                      name="lock"
+                      size={16}
+                      color={colors.textMuted}
+                    />
+                  }
+                  trailingIcon={
+                    <TouchableOpacity
+                      onPress={() => setShowPassword(!showPassword)}
+                    >
+                      <IconSymbol
+                        name={showPassword ? "eye.slash" : "eye"}
+                        size={18}
+                        color={colors.textMuted}
+                      />
+                    </TouchableOpacity>
+                  }
+                  error={fieldErrors.password || error || undefined}
+                />
+
+                {/* Forgot password */}
+                <View className="flex-row justify-end">
+                  <TouchableOpacity activeOpacity={0.7}>
+                    <ThemedText
+                      type="caption"
+                      accent
+                      uppercase
+                      className="tracking-wider"
+                    >
+                      {t("signIn.forgotPassword")}
+                    </ThemedText>
+                  </TouchableOpacity>
+                </View>
+
+                {/* Submit button */}
+                <ThemedButton
+                  label={t("signIn.submit")}
+                  variant="pitch"
+                  size="lg"
+                  loading={loading}
+                  showArrow
+                  uppercase
+                  onPress={handleSignIn}
+                  className="w-full"
+                />
               </View>
-              <ThemedText type="display">
-                Stewy
+            </ThemedFormCard>
+
+            {/* Bottom action */}
+            <View className="mt-6 flex-row justify-center items-center">
+              <ThemedText type="body" muted>
+                {t("signIn.noAccountPitch")}{" "}
               </ThemedText>
-            </View>
-            <ThemedText type="h2" className="mb-2">
-              {t("signIn.welcomeBack")}
-            </ThemedText>
-            <ThemedText type="body" variant="muted">
-              {t("signIn.subtitle")}
-            </ThemedText>
-          </View>
-
-          {/* Form */}
-          <View className="gap-5 bg-white/50 dark:bg-zinc-900/50 p-6 rounded-[2.5rem] border border-white/20 dark:border-zinc-800/50 shadow-premium-lg">
-            <ThemedInput
-              label={t("signIn.emailLabel")}
-              placeholder="admin@stewy.com"
-              value={email}
-              onChangeText={(v) => { setEmail(v); setFieldErrors({}); setError(""); }}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              leadingIcon={<IconSymbol name="envelope" size={18} color={colors.textMuted} />}
-              error={fieldErrors.email}
-            />
-
-            <ThemedInput
-              label={t("signIn.passwordLabel")}
-              placeholder="••••••••"
-              value={password}
-              onChangeText={(v) => { setPassword(v); setFieldErrors({}); setError(""); }}
-              secureTextEntry
-              leadingIcon={<IconSymbol name="lock" size={18} color={colors.textMuted} />}
-              error={fieldErrors.password || error || undefined}
-            />
-
-            <View className="pt-2">
-              <ThemedButton
-                label={t("signIn.submit")}
-                variant="primary"
-                size="lg"
-                loading={loading}
-                onPress={handleSignIn}
-                className="w-full shadow-accent-md"
-              />
-            </View>
-
-            <View className="flex-row justify-center mt-2">
-              <ThemedText type="bodySmall" variant="muted">
-                {t("signIn.noAccount")}{" "}
-              </ThemedText>
-              <TouchableOpacity onPress={() => router.push("/register")}>
-                <ThemedText type="bodySmall" className="font-bold" accent>
+              <TouchableOpacity
+                onPress={() => router.push("/register")}
+                activeOpacity={0.7}
+              >
+                <ThemedText type="bodySemiBold" accent uppercase>
                   {t("signIn.signUp")}
                 </ThemedText>
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
+
+      {Platform.OS === "ios" ||
+        (Platform.OS === "android" && (
+          <ThemedBottomNav items={bottomNavItems} activeKey="sign-in" />
+        ))}
     </ThemedView>
   );
 }

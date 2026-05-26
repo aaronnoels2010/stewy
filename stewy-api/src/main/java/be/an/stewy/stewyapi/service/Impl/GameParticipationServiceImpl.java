@@ -252,6 +252,28 @@ public class GameParticipationServiceImpl implements GameParticipationService {
                 .toList();
     }
 
+    @Override
+    public List<VolunteerGameDto> getPendingRequestsForClubGames(UUID clubId) {
+        List<Game> homeGames = gameRepository.findByHomeTeamId(clubId);
+        List<UUID> gameIds = homeGames.stream().map(Game::getId).toList();
+        if (gameIds.isEmpty()) return List.of();
+        return volunteerGameRepository.findByGameIds(gameIds).stream()
+                .filter(vg -> vg.getParticipationStatus() == ParticipationStatus.REQUESTED)
+                .map(this::toVolunteerGameDto)
+                .toList();
+    }
+
+    @Override
+    public List<VolunteerGameDto> getPendingInvitationsForClubGames(UUID clubId) {
+        List<Game> homeGames = gameRepository.findByHomeTeamId(clubId);
+        List<UUID> gameIds = homeGames.stream().map(Game::getId).toList();
+        if (gameIds.isEmpty()) return List.of();
+        return volunteerGameRepository.findByGameIds(gameIds).stream()
+                .filter(vg -> vg.getParticipationStatus() == ParticipationStatus.INVITED)
+                .map(this::toVolunteerGameDto)
+                .toList();
+    }
+
     private VolunteerGameDto toVolunteerGameDto(VolunteerGame vg) {
         Volunteer volunteer = volunteerRepository.findByVolunteerId(vg.getVolunteerId());
         String name = volunteer != null ? volunteer.getFirstName() + " " + volunteer.getLastName() : "Unknown";

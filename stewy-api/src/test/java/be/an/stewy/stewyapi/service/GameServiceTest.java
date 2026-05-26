@@ -10,6 +10,8 @@ import be.an.stewy.stewyapi.mapper.GameDto;
 import be.an.stewy.stewyapi.mapper.GameMapper;
 import be.an.stewy.stewyapi.repository.ClubRepository;
 import be.an.stewy.stewyapi.repository.GameRepository;
+import be.an.stewy.stewyapi.repository.VolunteerGameRepository;
+import be.an.stewy.stewyapi.repository.VolunteerRepository;
 import be.an.stewy.stewyapi.service.Impl.GameServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +34,10 @@ class GameServiceTest {
     private GameMapper gameMapper;
     @Mock
     private ClubRepository clubRepository;
+    @Mock
+    private VolunteerRepository volunteerRepository;
+    @Mock
+    private VolunteerGameRepository volunteerGameRepository;
 
     private GameServiceImpl gameService;
 
@@ -53,7 +59,7 @@ class GameServiceTest {
         responsible.setId(UUID.randomUUID());
         homeClub.setResponsible(responsible);
 
-        gameService = new GameServiceImpl(gameRepository, gameMapper, clubRepository);
+        gameService = new GameServiceImpl(gameRepository, gameMapper, clubRepository, volunteerRepository, volunteerGameRepository);
     }
 
     @Test

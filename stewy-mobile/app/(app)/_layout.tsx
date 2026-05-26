@@ -28,7 +28,6 @@ export default function AppLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="game/[id]" options={{ headerShown: false }} />
           <Stack.Screen name="create-game" options={{ headerShown: false }} />
-          <Stack.Screen name="club-management" options={{ headerShown: false }} />
         </Stack>
       </GameProvider>
     </React.Fragment>

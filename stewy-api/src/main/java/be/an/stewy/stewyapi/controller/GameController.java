@@ -6,6 +6,7 @@ import be.an.stewy.stewyapi.mapper.GameDto;
 import be.an.stewy.stewyapi.service.AuthorizationService;
 import be.an.stewy.stewyapi.service.GameService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -72,6 +73,14 @@ public class GameController {
     public Map<String, Object> findMyClubGames(Authentication authentication) {
         Volunteer volunteer = authorizationService.getCurrentVolunteer(authentication);
         return gameService.findMyClubGames(volunteer.getClub().getId());
+    }
+
+    @GetMapping(value = "/volunteers/my-games/upcoming", produces = "application/json")
+    public List<GameDto> getUpcomingGames(Authentication authentication) {
+        Authentication auth = authentication != null ? authentication : SecurityContextHolder.getContext().getAuthentication();
+        Volunteer volunteer = authorizationService.getCurrentVolunteer(auth);
+        if (volunteer.getClub() == null) return List.of();
+        return gameService.getUpcomingGamesForVolunteer(volunteer.getId());
     }
 
     @PostMapping(value = "/games/create", produces = "application/json")

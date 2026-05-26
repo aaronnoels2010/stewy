@@ -1,6 +1,12 @@
 import * as React from 'react';
-import renderer from 'react-test-renderer';
+import { act, create } from 'react-test-renderer';
 import { RolePicker } from '../RolePicker';
+
+function render(el: React.ReactElement) {
+  let root: ReturnType<typeof create>;
+  act(() => { root = create(el); });
+  return root!;
+}
 
 describe('RolePicker', () => {
   const roles = [
@@ -10,14 +16,14 @@ describe('RolePicker', () => {
   ];
 
   it('renders all three role options', () => {
-    const tree = renderer.create(
+    const tree = render(
       <RolePicker roles={roles} value="" onChange={() => {}} />
     ).toJSON();
     expect(tree).toMatchSnapshot();
   });
 
   it('highlights the selected role', () => {
-    const tree = renderer.create(
+    const tree = render(
       <RolePicker roles={roles} value="STEWARD" onChange={() => {}} />
     ).toJSON();
     expect(tree).toMatchSnapshot();

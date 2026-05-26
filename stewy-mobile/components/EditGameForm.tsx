@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   ScrollView,
@@ -15,6 +15,7 @@ import { useDesignTokens } from '@/hooks/useDesignTokens';
 import { Game } from '@/contexts/games.context';
 import { ThemedDatePickerModal } from './ThemedDatePickerModal';
 import { ThemedTimePickerModal } from './ThemedTimePickerModal';
+import { formatDateForDisplay, formatTimeForDisplay } from '@/lib/dateUtils';
 
 interface EditGameFormProps {
   game: Game;
@@ -22,165 +23,51 @@ interface EditGameFormProps {
   onCancel: () => void;
 }
 
-const getDaysInMonth = (m: number, y: number) => {
-  const daysInMonthList = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  if (m === 2) {
-    return (y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0)) ? 29 : 28;
+function parseAppointment(appointment: string): { date: Date; time: Date } {
+  const d = new Date(appointment);
+  if (isNaN(d.getTime())) {
+    const now = new Date();
+    return { date: now, time: now };
   }
-  return daysInMonthList[m - 1] || 31;
-};
-
-const formatDatePickerText = (text: string, prev: string) => {
-  if (text.length < prev.length) return text;
-  const digits = text.replace(/\D/g, '');
-  if (digits.length <= 2) {
-    return digits;
-  } else if (digits.length <= 4) {
-    return `${digits.slice(0, 2)}/${digits.slice(2)}`;
-  } else {
-    return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4, 8)}`;
-  }
-};
-
-const formatTimePickerText = (text: string, prev: string) => {
-  if (text.length < prev.length) return text;
-  const digits = text.replace(/\D/g, '');
-  if (digits.length <= 2) {
-    return digits;
-  } else {
-    return `${digits.slice(0, 2)}:${digits.slice(2, 4)}`;
-  }
-};
+  return { date: d, time: d };
+}
 
 export function EditGameForm({ game, onSubmit, onCancel }: EditGameFormProps) {
-  const [date, setDate] = useState(game.date);
-  const [time, setTime] = useState(game.time);
+  const { date: initialDate, time: initialTime } = parseAppointment(game.appointment);
+  const [date, setDate] = useState<Date>(initialDate);
+  const [time, setTime] = useState<Date>(initialTime);
   const [location, setLocation] = useState(game.location);
   const [accessibility, setAccessibility] = useState(game.accessibility || '');
   const { colors } = useDesignTokens();
 
-  // Picker Modal State
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
-
-  // Validation State (Initialized as undefined because current saved values are assumed valid)
   const [dateError, setDateError] = useState<string | undefined>(undefined);
   const [timeError, setTimeError] = useState<string | undefined>(undefined);
 
-  const validateAndSetDate = (value: string) => {
-    if (!value) {
-      setDateError(undefined);
-      return;
-    }
-
-    const digitsOnly = value.replace(/\D/g, '');
-    
-    if (digitsOnly.length >= 2) {
-      const month = parseInt(digitsOnly.slice(0, 2), 10);
-      if (month < 1 || month > 12) {
-        setDateError('Month must be 01 - 12');
-        return;
-      }
-    }
-
-    if (digitsOnly.length >= 4) {
-      const month = parseInt(digitsOnly.slice(0, 2), 10);
-      const day = parseInt(digitsOnly.slice(2, 4), 10);
-      const year = digitsOnly.length >= 8 ? parseInt(digitsOnly.slice(4, 8), 10) : new Date().getFullYear();
-      
-      const maxDays = getDaysInMonth(month, year);
-      if (day < 1 || day > maxDays) {
-        setDateError(`Day must be 01 - ${maxDays}`);
-        return;
-      }
-    }
-
-    if (value.length < 10) {
-      setDateError(undefined);
-      return;
-    }
-
-    const parts = value.split('/');
-    if (parts.length !== 3 || parts[2].length !== 4) {
-      setDateError('Use MM/DD/YYYY format');
-      return;
-    }
-
-    const month = parseInt(parts[0], 10);
-    const day = parseInt(parts[1], 10);
-    const year = parseInt(parts[2], 10);
-
-    const dateObj = new Date(year, month - 1, day);
-    if (isNaN(dateObj.getTime())) {
-      setDateError('Invalid calendar date');
-      return;
-    }
-
+  const handleDateChange = (d: Date) => {
+    setDate(d);
     setDateError(undefined);
   };
 
-  const validateAndSetTime = (value: string) => {
-    if (!value) {
-      setTimeError(undefined);
-      return;
-    }
-
-    const digitsOnly = value.replace(/\D/g, '');
-
-    if (digitsOnly.length >= 2) {
-      const hour = parseInt(digitsOnly.slice(0, 2), 10);
-      if (hour < 0 || hour > 23) {
-        setTimeError('Hour must be 00 - 23');
-        return;
-      }
-    }
-
-    if (value.length < 5) {
-      setTimeError(undefined);
-      return;
-    }
-
-    const parts = value.split(':');
-    if (parts.length !== 2 || parts[0].length !== 2 || parts[1].length !== 2) {
-      setTimeError('Use HH:MM format');
-      return;
-    }
-
-    const hour = parseInt(parts[0], 10);
-    const minute = parseInt(parts[1], 10);
-
-    if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-      setTimeError('Hour (00-23), Minute (00-59)');
-      return;
-    }
-
+  const handleTimeChange = (t: Date) => {
+    setTime(t);
     setTimeError(undefined);
   };
 
-  const handleDateChange = (text: string) => {
-    const formatted = formatDatePickerText(text, date);
-    setDate(formatted);
-    validateAndSetDate(formatted);
-  };
-
-  const handleTimeChange = (text: string) => {
-    const formatted = formatTimePickerText(text, time);
-    setTime(formatted);
-    validateAndSetTime(formatted);
-  };
-
-  const isDateValid = date.length === 10 && !dateError;
-  const isTimeValid = time.length === 5 && !timeError;
-  const isComplete = !!(location && isDateValid && isTimeValid);
+  const isComplete = !!(date && time && location);
 
   const handleSubmit = () => {
     if (!isComplete) return;
+    const combinedDate = new Date(date);
+    combinedDate.setHours(time.getHours(), time.getMinutes(), 0, 0);
     onSubmit({
-      date,
-      time,
       location,
+      appointment: combinedDate.toISOString(),
       accessibility: accessibility.trim() || undefined,
     });
+    setShowTimePicker(false);
+    setShowDatePicker(false);
   };
 
   const iconColor = colors.textMuted;
@@ -192,7 +79,6 @@ export function EditGameForm({ game, onSubmit, onCancel }: EditGameFormProps) {
     >
       <ThemedView variant="default" className="flex-1 p-6">
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Header */}
           <View className="flex-row justify-between items-center mb-8 mt-2">
             <ThemedText type="h2">Edit Game</ThemedText>
             <ThemedButton
@@ -205,17 +91,15 @@ export function EditGameForm({ game, onSubmit, onCancel }: EditGameFormProps) {
             />
           </View>
 
-          {/* Form fields */}
           <View className="gap-5">
             <View className="flex-row gap-4">
               <View className="flex-1">
                 <ThemedInput
                   label="Date"
-                  placeholder="MM/DD/YYYY"
-                  value={date}
-                  onChangeText={handleDateChange}
-                  keyboardType="number-pad"
-                  maxLength={10}
+                  placeholder="dd-MM-yyyy"
+                  value={formatDateForDisplay(date)}
+                  onChangeText={() => {}}
+                  editable={false}
                   error={dateError}
                   leadingIcon={<IconSymbol name="calendar" size={18} color={iconColor} />}
                   trailingIcon={
@@ -228,11 +112,10 @@ export function EditGameForm({ game, onSubmit, onCancel }: EditGameFormProps) {
               <View className="flex-1">
                 <ThemedInput
                   label="Time"
-                  placeholder="HH:MM"
-                  value={time}
-                  onChangeText={handleTimeChange}
-                  keyboardType="number-pad"
-                  maxLength={5}
+                  placeholder="HH:mm"
+                  value={formatTimeForDisplay(time)}
+                  onChangeText={() => {}}
+                  editable={false}
                   error={timeError}
                   leadingIcon={<IconSymbol name="clock" size={18} color={iconColor} />}
                   trailingIcon={
@@ -261,7 +144,6 @@ export function EditGameForm({ game, onSubmit, onCancel }: EditGameFormProps) {
             />
           </View>
 
-          {/* Submit */}
           <View className="pt-8 pb-12">
             <ThemedButton
               label="Save Changes"
@@ -275,24 +157,17 @@ export function EditGameForm({ game, onSubmit, onCancel }: EditGameFormProps) {
         </ScrollView>
       </ThemedView>
 
-      {/* Pickers */}
       <ThemedDatePickerModal
         visible={showDatePicker}
         value={date}
-        onChange={(newDate) => {
-          setDate(newDate);
-          validateAndSetDate(newDate);
-        }}
+        onChange={handleDateChange}
         onClose={() => setShowDatePicker(false)}
       />
 
       <ThemedTimePickerModal
         visible={showTimePicker}
         value={time}
-        onChange={(newTime) => {
-          setTime(newTime);
-          validateAndSetTime(newTime);
-        }}
+        onChange={handleTimeChange}
         onClose={() => setShowTimePicker(false)}
       />
     </KeyboardAvoidingView>

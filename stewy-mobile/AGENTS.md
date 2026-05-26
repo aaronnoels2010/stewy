@@ -46,3 +46,7 @@ stewy-mobile is a cross-platform mobile application built with Expo (React Nativ
 - Absolute imports for clean code structure.
 - Always write tests for new logic
 - Performance optimized
+
+## Translations
+- Translations live in `public/translation/en.json` and `public/translation/nl.json`
+- **When adding a key to `en.json`, always add the corresponding Dutch translation to `nl.json`** — keep both files structurally in sync

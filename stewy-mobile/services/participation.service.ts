@@ -34,6 +34,13 @@ export const participationService = {
   getMyInvitations: () =>
     api.get<VolunteerGameEntry[]>('/volunteers/invitations'),
 
+  // HoofdSteward aggregate endpoints
+  getPendingRequestsForClub: () =>
+    api.get<VolunteerGameEntry[]>('/hoofdsteward/games/pending-requests'),
+
+  getPendingInvitationsForClub: () =>
+    api.get<VolunteerGameEntry[]>('/hoofdsteward/games/pending-invitations'),
+
   // Cancel & Withdraw (Issue #7)
   cancelParticipation: (gameId: string, volunteerId: string) =>
     api.post<{ status: string }>(`/games/${gameId}/participants/${volunteerId}/cancel`, {}),

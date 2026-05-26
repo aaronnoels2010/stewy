@@ -22,4 +22,5 @@ public interface GameService {
 
     Map<String, Object> findMyClubGames(UUID clubId);
     GameDto createGameAsHoofdSteward(GameRegistrationDto dto, UUID clubId);
+    List<GameDto> getUpcomingGamesForVolunteer(UUID volunteerId);
 }

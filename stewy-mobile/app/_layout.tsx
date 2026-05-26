@@ -8,17 +8,49 @@ import 'react-native-reanimated';
 import '../global.css';
 import '../translation'
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useColorScheme } from 'nativewind';
 import { SessionProvider } from '@/contexts/auth.context';
+import { PreferencesProvider, usePreferences } from '@/contexts/preferences.context';
 import { Colors } from '@/constants/Colors';
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
+import {
+  ArchivoNarrow_700Bold,
+  ArchivoNarrow_600SemiBold,
+} from '@expo-google-fonts/archivo-narrow';
+import {
+  HankenGrotesk_400Regular,
+  HankenGrotesk_600SemiBold,
+} from '@expo-google-fonts/hanken-grotesk';
+import {
+  JetBrainsMono_500Medium,
+} from '@expo-google-fonts/jetbrains-mono';
+
 SplashScreen.preventAutoHideAsync();
 
+function ThemeEffect() {
+  const { theme } = usePreferences();
+  const { setColorScheme } = useColorScheme();
+
+  useEffect(() => {
+    if (theme === 'auto') {
+      setColorScheme('system');
+    } else {
+      setColorScheme(theme);
+    }
+  }, [theme, setColorScheme]);
+
+  return null;
+}
+
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const { colorScheme } = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    ArchivoNarrow_700Bold,
+    ArchivoNarrow_600SemiBold,
+    HankenGrotesk_400Regular,
+    HankenGrotesk_600SemiBold,
+    JetBrainsMono_500Medium,
   });
 
   const theme = useMemo(() => {
@@ -53,8 +85,11 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={theme}>
       <SessionProvider>
-        <Slot />
-        <StatusBar style="auto" />
+        <PreferencesProvider>
+          <ThemeEffect />
+          <Slot />
+          <StatusBar style="auto" />
+        </PreferencesProvider>
       </SessionProvider>
     </ThemeProvider>
   );

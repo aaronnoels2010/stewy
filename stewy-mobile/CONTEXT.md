@@ -52,8 +52,14 @@ A fallback that was previously used to let users into the app during network fai
 ## Validation Error Response
 The API returns validation errors as a structured JSON object with `{ "errors": { "fieldName": "error message" } }` and HTTP 400 status. The mobile app maps these back to individual form field `error` props for per-field display.
 
+## Theme Preference
+A user's choice of color scheme, persisted across sessions. Supports three states: `light` (forces light mode), `dark` (forces dark mode), and `auto` (follows device setting, the default). Accessible via compact icon buttons in the desktop header and Profile tab on mobile. The preference is stored in AsyncStorage and applied immediately by overriding NativeWind's `colorScheme`.
+
+## Language Preference
+A user's choice of application locale, persisted across sessions. Defaults to `nl` (Dutch). Switching languages is possible via a compact toggle (flag icons) in the desktop header and Profile tab on mobile. The preference is stored in AsyncStorage and applied immediately via i18next without page reload.
+
 ## Game
-A match between two clubs with an appointment date/time, a deadline for volunteer sign-up, location, accessibility info, and a lifecycle status.
+A match between two clubs with an appointment date/time, a deadline for volunteer sign-up, location, accessibility info, and a lifecycle status. Created by a HoofdSteward. The creation form uses Zod schema validation with i18n translation keys as error messages. Away team is selected via a combobox of available clubs (excluding the creator's home club). Dates use dd-MM-yyyy display format in pickers, converted to yyyy-MM-dd HH:mm for the API.
 
 ### Game Status
 - `CREATE` — game is being set up

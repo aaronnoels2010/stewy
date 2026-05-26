@@ -18,4 +18,6 @@ public interface GameRepository {
     long totalCountGames();
     List<Game> getGamesByClub(Club club);
     List<Game> findAllGamesByStatus(List<String> statussen);
+    List<Game> findByHomeTeamId(UUID clubId);
+    List<Game> findOpenGamesByClubId(UUID clubId);
 }
